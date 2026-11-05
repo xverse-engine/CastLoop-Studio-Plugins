@@ -1,0 +1,8 @@
+.env
+.env.*
+!.env.example
+*.log
+output/
+tmp/
+.DS_Store
+Thumbs.db

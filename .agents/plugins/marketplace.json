@@ -1,0 +1,12 @@
+{
+  "name": "castloop-studio-development",
+  "interface": { "displayName": "CastLoop Studio 内部测试" },
+  "plugins": [
+    {
+      "name": "castloop-studio-sit",
+      "source": { "source": "local", "path": "./plugins/castloop-studio-sit" },
+      "policy": { "installation": "AVAILABLE", "authentication": "ON_INSTALL" },
+      "category": "Creativity"
+    }
+  ]
+}

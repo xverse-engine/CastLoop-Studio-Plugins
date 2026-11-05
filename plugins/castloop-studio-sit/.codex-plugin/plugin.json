@@ -1,0 +1,29 @@
+{
+  "name": "castloop-studio-sit",
+  "version": "0.1.3",
+  "description": "Connect to CastLoop Studio SIT to read saved character profiles and edit existing characters through authenticated MCP tools.",
+  "author": {
+    "name": "CastLoop"
+  },
+  "interface": {
+    "displayName": "CastLoop Studio SIT",
+    "shortDescription": "读取与编辑测试故事角色",
+    "longDescription": "连接 CastLoop Studio 测试环境，读取已保存故事中的角色，修改已有角色的名字、设定、年龄和目标身高。需要 Studio 账号及作品编辑权限。本测试版暂不提供作品列表、新建角色或图片生成。",
+    "developerName": "CastLoop",
+    "category": "Creativity",
+    "logo": "./assets/icon.png",
+    "composerIcon": "./assets/icon.png",
+    "logoDark": "./assets/icon.png",
+    "composerIconDark": "./assets/icon.png",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "读取我指定的 SIT 测试故事角色，先不要修改。",
+      "根据我的要求修改指定故事的角色资料，并读回核对。"
+    ]
+  },
+  "skills": "./skills",
+  "mcpServers": "./.mcp.json"
+}
