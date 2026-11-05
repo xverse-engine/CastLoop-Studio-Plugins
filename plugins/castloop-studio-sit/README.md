@@ -1,6 +1,6 @@
 ﻿# CastLoop Studio SIT
 
-Codex 插件版本 **0.1.6**（源码准备，待配套后端部署验收），仅连接 CastLoop Studio 测试环境。
+Codex 插件版本 **0.1.7**（配套后端 **3.30.0-preview.4**，需部署后验收），仅连接 CastLoop Studio 测试环境。
 
 ## 能力
 
@@ -12,6 +12,7 @@ Codex 插件版本 **0.1.6**（源码准备，待配套后端部署验收），�
 | `add/removeCharacterPhase/State` | 四个角色阶段/状态独立增删入口，不生图 |
 | `readStorySections` / `readStoryGraph` / `readStoryNodes` | 读取故事、资产和剧情 |
 | `patchStoryOutline` | 修改大纲，不直接修改剧情节点 |
+| `composeStoryFlow`（后端 preview.4 起） | 仅 modifyNodes：已有节点标题、梗概、关键/结局标记和选项前提示；不支持节点增删、连线、对话或子图生成 |
 | `composeLocation` / `composeItem` / `composeWorldSetting` | 创建/修改资产文字资料与世界观，不生图 |
 
 故事读改仍使用明确的 storyId 和作品编辑权限；可先通过 listStories 将名称解析为 ID，重名时由用户确认。旧后端未提供列表时仍手动指定 ID，未开放新参数时保留基础修改范围。上述新增能力需后端部署，不能仅凭插件版本判断可用。默认 Narrator 受保护；读取线上已保存的可编辑草稿，不包含浏览器未保存内容。不提供生图、语音合成或发布能力。

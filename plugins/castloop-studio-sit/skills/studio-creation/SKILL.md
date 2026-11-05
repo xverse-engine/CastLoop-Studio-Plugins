@@ -31,6 +31,8 @@ Follow the live tool schema. Older deployments support only exact `updates.name/
 
 Use `updates` for exact final values and `fields` for generation instructions, not both for the same text. Generation can incur charges. For `characterId=new`, omit voiceId and voiceSelectionMode: the server selects a voice. For existing characters, edit voiceProfile/voiceDescription without automatically changing the assigned voice; request `voiceSelectionMode=auto` only when matching is intended. Use `voiceSelectionMode=exact` plus a known voiceId for exact selection, never invent a catalog ID. TTS settings do not generate speech audio.
 
+When the live tool explicitly documents it, exact updates with ttsLanguage=other and no fields create a character without model calls or voice selection. This creates a character with no assigned voice; do not choose other for users who requested a supported speech language merely to avoid a charge. Adding fields still requests text generation. Supply at least one effective change.
+
 Batch phase/state operations use add/update/remove. Only update may include a replacement name; remove omits description. Operations run phases first, then states, then settings, saved together. Preserve protected defaults and the five-phase limit. Independent add/remove tools are also available when exposed; do not apply the same change through both paths. Removed references do not mean cloud assets were deleted. After uncertain creation outcomes, read characters before retrying to avoid duplicates.
 
 A successful save returns `status: saved` and a save receipt. Read the affected character back to confirm, then report only the actual changes and the target story. For collaboration, writes affect the caller's editable draft rather than approving or publishing the main version.
@@ -58,3 +60,7 @@ This tool modifies the outline, not graph nodes or published content. Require th
 ## Asset and world composition (when exposed)
 
 Use composeLocation/composeItem/composeWorldSetting only when exposed and requested. Read current sections first for existing targets, use stable IDs, and follow the live schema for new versus existing and modify versus rewrite. These tools compose asset/world text, not images. Generation may incur charges; require a saved receipt and read back the requested changes. Do not infer that character completion enables story graph writes, project creation/copying, or generation task management.
+
+## Exact story node edits (when exposed)
+
+Use composeStoryFlow only for branches exposed by the live schema. The initial modifyNodes branch edits existing section name, description, isKeyNode, isEnding and hintBeforeChoice with exact values. Read node UIDs and current fields first; do not use display numbers. Each node appears once per call. Preserve unrequested fields and verify the saved receipt followed by readStoryNodes. isEnding only changes the legacy flag, not actual routing or explicit exits; do not use it to claim connections were removed. Node creation/deletion, choices, dialogue editing and subgraph generation remain unavailable unless explicitly exposed by a later server. Never substitute patchStoryOutline or raw archive writes for these missing operations.

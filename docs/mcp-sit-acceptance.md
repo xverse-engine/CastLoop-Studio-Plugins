@@ -2,6 +2,10 @@
 
 适用基线：插件 0.1.5、编辑器/后端 3.30.0-preview.3。版本号只是预期，实际部署、连接、工具参数及读写结果均须验证。本文件是执行说明，不是已通过的测试报告。
 
+后续修复验收（插件 0.1.7 源码准备，配套后端版本待发布）：保留上述十四工具基线，新后端增加 composeStoryFlow.modifyNodes 后为十五个。先检查 composeCharacter 呈现明确的对象字段而不是四个未知键值对象联合，且实时说明明确 `ttsLanguage=other` 的无模型调用条件；仅插件升级不能证明后端已修复。
+
+对于已完成读取、大纲和 Narrator 保护的报告，可以沿用 runId 和用户授权目标，先重新核对目标及基线，再续跑 B01—B10、C01—C05；不重复创建已有测试角色，先读回报告中记录的 ID。付费仍默认关闭。不覆盖原始报告，在续验报告中记录修复前后证据与部署版本未知项。
+
 ## 交给 Agent 的启动指令
 
 把本文件提供给已安装插件并完成授权的 Agent，然后发送：
@@ -45,6 +49,8 @@
 | 大纲（1 个） | patchStoryOutline |
 | 资产/世界观（3 个） | composeLocation、composeItem、composeWorldSetting |
 
+下一批附加工具：composeStoryFlow，仅支持 modifyNodes。它不存在时记录 G 组未部署，不影响原十四工具验收。即使出现该工具，也不推断支持其他剧情操作。
+
 composeCharacter 应开放 new、fields.name/persona/voiceProfile、音色/TTS updates、phaseOperations/stateOperations。只看到工具名不能证明这些分支已部署。
 
 ## A：连接、读取与基线
@@ -64,6 +70,8 @@ composeCharacter 应开放 new、fields.name/persona/voiceProfile、音色/TTS u
 B01 使用全部精确 updates 创建一个测试角色，name 为 `MCP验收-{runId}-角色`、persona 为 `验收专用调查员`、age 为 `25`、targetHeightCm 为 170、ttsLanguage 为 `other`。不传 fields、voiceId 或 voiceSelectionMode。当前 other 分支不自动选音色，因而不调用付费选择器；如果实时说明不支持此行为，停下并记 BLOCKED，不能擅自使用收费创建路径。
 
 创建后记录角色 ID。它只能在本轮创建一次，后续全部复用。
+
+若仍显示宽泛联合参数，单独记录 schema 展示问题；只有实时工具说明已明确上述精确创建条件且能构造所需参数时才继续 B01。不要通过允许付费来掩盖描述缺失问题。`other` 仅跳过自动音色匹配；传入 fields 仍会生成文本，不能把所有 other 请求都视为免费。
 
 | 编号 | 执行 | 通过条件 |
 | --- | --- | --- |
@@ -135,6 +143,17 @@ E01/E02 不收费，默认执行：先重新读取大纲。E01 在末尾新增�
 | 已有图片不串位 | 用户提供有阶段/状态图片的可丢弃测试角色并允许修改，做前后截图比较 | 新建空角色只覆盖空矩阵；本轮不能算有图片样本已验证 |
 
 额外条件不具备就记录 NOT_VERIFIED。发布、图片/语音/视频生成、剧情节点写入、后台任务恢复不属于当前 14 个工具验收范围。
+
+## G：已有剧情节点修改（可选，不调用模型）
+
+仅在用户明确开启 RUN_FLOW=true 并提供允许修改的专用未发布节点 UID 时执行；默认 SKIP。当前不能通过 MCP 新建测试节点，不自行选真实剧情节点替代。此授权是规则 8 对剧情测试的例外，仅允许指定节点及以下字段。
+
+1. G01：调用 readStoryNodes 记录完整公开结果，确认目标为 section。选择已经存在且可精确恢复的 name/description/hintBeforeChoice/isKeyNode 字段；不存在的字段不新增（本切片不能恢复成字段不存在）。至少要求原 name 非空。保存待恢复值。
+2. G02：用 composeStoryFlow.modifyNodes 修改标题为验收前缀、以及可恢复的上述字段；检查 saved、modifiedNodeIds 和非空 historyVersionKey，读回核对。对话、路由、位置和未请求的公开字段必须不变。isEnding 不在自动成功测试中修改，避免把标记误当作路由切换。
+3. G03：再次读回，确认被测字段仍为本次写入值后，精确恢复原值并读回。若出现外部修改、结果未知或写入失败，停止后续修改，记录未恢复项，不能覆盖他人变更。整份公开节点结果应与 G01 相同。
+4. G04：提交同一 nodeId 的两个修改项，预期拒绝且读回不变；不发送节点删除、连线或对话参数来猜测实现范围。
+
+未发布节点无法从接口确定时要求用户确认，不能凭借普通读取结果假定未发布。缺少节点、授权或该工具时记 SKIP/BLOCKED，不影响原十四工具测试结果；报告单列 G 组，不能把它算成完整剧情写入验收。
 
 ## 清理与测试报告
 

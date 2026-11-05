@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### 0.1.7（待配套后端部署验收）
+
+- 补充角色精确新建且 ttsLanguage=other 时不调用模型的适用条件；以实时工具说明为准。
+- 增加 composeStoryFlow.modifyNodes 使用指引，仅覆盖已有节点的五项资料，不宣称完整剧情写入。
+- 补充验收续跑指引与可选节点修改测试；不重复发布用户验收报告或故事数据。
+
 ### 0.1.6
 
 - 将唯一 Skill 从 Studio Characters 更名为「Studio 创作」（studio-creation），覆盖故事读取、角色、资产、世界观和大纲操作。
