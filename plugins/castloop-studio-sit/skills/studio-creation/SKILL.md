@@ -17,6 +17,12 @@ Older server deployments may not expose `listStories`. In that case, explain the
 
 Use the host's account connection flow for login and consent. Never request passwords, cookies, bearer tokens or API keys in chat. Do not bypass this plugin with raw HTTP or use the user's local credential files.
 
+## Connection and authorization recovery
+
+If no CastLoop tools are available, use the host's supported tool discovery first. An empty tool list alone does not prove token expiry or a server outage. If the host reports authentication required or an expired/rejected token, tell the user to open the MCP server connection for CastLoop Studio SIT and use its Authenticate/Reconnect action. Prefer a host-provided authorization button or link when available; never invent an OAuth URL, reuse an old authorization URL, or present the Studio homepage as an MCP authorization link. The callback, state and PKCE belong to the host. If the tools remain absent after authentication, ask the user to start a new conversation and check again.
+
+Distinguish permission errors (insufficient_scope/forbidden) from token errors; do not repeatedly request login for an operation the account cannot perform. Do not claim this skill automatically refreshes credentials: refresh is handled by the client and authorization server. After connection recovery, read back any write whose outcome was uncertain before continuing; never automatically replay creation or generation. Report connection verification separately from story read/write verification.
+
 ## Read
 
 Call `readStoryCharacters` with `storyId`. It reads the current authenticated user's saved editable draft, not unsaved browser changes. The default page size is 20; follow `nextOffset` when the requested list extends beyond a page. Character IDs for subsequent calls are positive decimal strings; copy them from tool results rather than guessing.
@@ -48,6 +54,8 @@ Only use tools and parameter branches exposed by the connected server. This pack
 Use `readStorySections` to read saved story metadata, worldInfo, outline, locations or items. Follow pagination when the requested scope exceeds one page. Outline positions are one-based. Reading an asset does not imply that asset creation, editing or generation tools are available.
 
 Use `readStoryNodes` for explicit relevant node UIDs, or `readStoryGraph` when complete cross-node context is necessary. Use stable node IDs, not display numbers or guessed titles. Respect effective outputs: explicit exits override stale legacy routes; insertion-ending conditions are not normal edges. Components preserve the saved dialogue data, including canonical and legacy representations; do not invent missing branches or IDs.
+
+When available, use server-returned `publication` metadata to check node protection. `published` and `pendingLocked` are separate; published nodes can still allow some edits. `editableFields` / `restrictedFields` cover only `composeStoryFlow.modifyNodes`, not routing, deletion, dialogue or general write permission. A read-only connection still needs write authorization to modify anything. Missing metadata or `status=unknown` does not mean unpublished or unlocked. Readback is advisory: each save revalidates current permissions and publication constraints. For authorized automatic selection of an unpublished test node, require known state, published=false, pendingLocked=false and the requested fields in editableFields; otherwise ask the user to confirm or report the test blocked. Do not probe protection by writing.
 
 If a graph/node result says `complete=false`, inspect its reason, omitted fields and missingNodeIds. Request fewer relevant nodes when detail is too large. Do not claim to have inspected omitted content or silently substitute another story/node.
 
