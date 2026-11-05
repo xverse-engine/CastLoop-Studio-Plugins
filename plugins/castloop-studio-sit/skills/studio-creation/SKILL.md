@@ -1,6 +1,6 @@
 ---
-name: studio-characters
-description: Use when the user wants to find a saved CastLoop Studio SIT story, read its story content or assets, or edit supported character profiles and outline entries through connected MCP tools.
+name: studio-creation
+description: Use when the user wants to find a saved CastLoop Studio SIT story, read its content or assets, or edit supported characters, locations, items, world settings and outline entries through connected MCP tools.
 ---
 
 # CastLoop Studio SIT story editing

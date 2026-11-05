@@ -8,7 +8,7 @@ Agent plugins and MCP connection configurations for CastLoop Studio.
 
 | 插件 | 环境 | 版本 | 能力 |
 | --- | --- | --- | --- |
-| [CastLoop Studio SIT](plugins/castloop-studio-sit/README.md) | 测试环境 | 0.1.5 源码准备 | 查找故事、读取剧情，按实时 schema 使用角色、资产、世界观及大纲工具；新增能力待后端部署验收 |
+| [CastLoop Studio SIT](plugins/castloop-studio-sit/README.md) | 测试环境 | 0.1.6 源码准备 | 查找故事、读取剧情，按实时 schema 使用角色、资产、世界观及大纲工具；新增能力待后端部署验收 |
 
 当前市场仅提供 SIT 测试插件，需要测试环境账号和目标作品的编辑权限。正式版尚未提供，不用于正式作品。
 
@@ -26,6 +26,10 @@ Agent plugins and MCP connection configurations for CastLoop Studio.
 名称搜索需后端部署 `listStories`，同名作品需先确认具体目标，不会自动选择第一项。工具真正可调用、读取及修改保存成功，才代表连接与读写链路完成验收；技能开关或安装成功不代表已登录。
 
 若曾添加后端仓库或本地目录作为同名市场来源，应通过客户端管理入口移除旧市场来源后再添加本仓库，避免同名市场冲突。无需手工修改个人 TOML 或插件缓存。
+
+## Agent 自动验收
+
+安装并授权后，可将 [SIT MCP 验收任务书](docs/mcp-sit-acceptance.md) 交给 Agent，指定专用测试故事执行。文档包含逐项调用、读回断言、可选收费测试、清理限制与报告模板；不要求手动逐条发测试指令。默认跳过付费生成，Studio 画面与跨账号权限仍单独验收。
 
 ## 更新与环境隔离
 

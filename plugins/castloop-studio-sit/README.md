@@ -1,6 +1,6 @@
 ﻿# CastLoop Studio SIT
 
-Codex 插件版本 **0.1.5**（源码准备，待配套后端部署验收），仅连接 CastLoop Studio 测试环境。
+Codex 插件版本 **0.1.6**（源码准备，待配套后端部署验收），仅连接 CastLoop Studio 测试环境。
 
 ## 能力
 

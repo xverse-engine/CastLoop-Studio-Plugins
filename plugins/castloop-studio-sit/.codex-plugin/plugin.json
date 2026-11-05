@@ -1,13 +1,13 @@
 {
   "name": "castloop-studio-sit",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Connect to CastLoop Studio SIT to find stories, read saved content and use supported character, asset, world and outline editing tools.",
   "author": {
     "name": "CastLoop"
   },
   "interface": {
     "displayName": "CastLoop Studio SIT",
-    "shortDescription": "读取与编辑测试故事角色",
+    "shortDescription": "查找、读取与编辑测试故事",
     "longDescription": "连接 CastLoop Studio 测试环境，查找故事、读取剧情，并使用后端开放的角色、资产资料、世界观和大纲工具。角色工具可支持新建、资料生成、音色设置及阶段状态修改；具体以连接后工具参数为准，旧后端保留原有基础能力。需要 Studio 账号及作品编辑权限，不提供图片生成或发布。",
     "developerName": "CastLoop",
     "category": "Creativity",
