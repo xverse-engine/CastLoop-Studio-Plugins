@@ -28,6 +28,7 @@
 | ALLOW_PAID | false | 是否允许文本生成及音色自动匹配产生费用 |
 | RUN_EXTENDED | false | 是否测试地点、道具和世界观生成；须同时允许付费 |
 | RUN_FLOW | false | 是否执行 G 组已有剧情节点修改；不调用生成模型。还需指定节点 UID，或明确允许 Agent 在指定测试故事中自动选择 |
+| RUN_FLOW_STRUCTURE | false | 是否执行 H 组新建测试子图及删除；仅操作本轮新建节点，不碰已有故事连线，不调用模型 |
 | runId | Agent 创建 | UTC 时间加短随机后缀；同次测试与恢复沿用，不重复创建 |
 
 若只有名称，先按名称查找；重名时让用户选择。没有明确测试故事时，可以检查连接和工具发现，不能执行写入。当前 MCP 不提供创建/复制故事，不能为了准备环境自行调用其他接口。
@@ -159,7 +160,7 @@ E01/E02 不收费，默认执行：先重新读取大纲。E01 在末尾新增�
 
 仅在用户明确开启 RUN_FLOW=true 后执行；默认 SKIP。节点授权支持两种方式：用户提供允许修改的专用未发布节点 UID；或用户明确允许 Agent 在指定的专用测试故事中自动选择。仅允许角色测试或仅开启付费测试，不等于授权修改剧情节点。此授权是规则 8 对剧情测试的例外，仅允许选定节点及以下字段。
 
-自动选择时，先用 readStoryGraph/readStoryNodes 查找普通 section，核对未发布、可编辑状态，以及下述字段是否可精确恢复；记录选择依据和真实 UID。不要仅凭名称、节点位置或“测试故事”推断其未发布。若公开数据不能确认保护状态，先请求用户确认候选节点；没有合适节点或授权信息不足时记 BLOCKED，说明缺少的条件，不尝试写入来探测锁定。当前 MCP 不支持创建节点；可由用户在 Studio 新建、保存并关闭编辑页后继续，不得改用其他接口创建。
+自动选择时，先用 readStoryGraph/readStoryNodes 查找普通 section，核对未发布、可编辑状态，以及下述字段是否可精确恢复；记录选择依据和真实 UID。不要仅凭名称、节点位置或“测试故事”推断其未发布。若公开数据不能确认保护状态，先请求用户确认候选节点；没有合适节点或授权信息不足时记 BLOCKED，说明缺少的条件，不尝试写入来探测锁定。G 组授权不包括新建节点；不能为了继续 G 组擅自创建节点。节点增删另按 H 组执行，先确认实时 schema 同时支持 addNodes 和 deleteNodes。
 
 1. G01：调用 readStoryNodes 记录完整公开结果，确认目标为 section。选择已经存在且可精确恢复的 name/description/hintBeforeChoice/isKeyNode 字段；不存在的字段不新增（本切片不能恢复成字段不存在）。至少要求原 name 非空。保存待恢复值。
 2. G02：用 composeStoryFlow.modifyNodes 修改标题为验收前缀、以及可恢复的上述字段；检查 saved、modifiedNodeIds 和非空 historyVersionKey，读回核对。对话、路由、位置和未请求的公开字段必须不变。isEnding 不在自动成功测试中修改，避免把标记误当作路由切换。
@@ -169,6 +170,18 @@ E01/E02 不收费，默认执行：先重新读取大纲。E01 在末尾新增�
 新后端返回节点 `publication` 时，自动选点要求 status=known、published=false、pendingLocked=false，且拟修改字段均在 editableFields 中。对 readStoryGraph/readStoryNodes 同一节点核对这些信息一致。该列表只覆盖 modifyNodes，不代表一般写权限或无需保存校验。已发布但允许修改文案的节点仍不用于本组自动测试。
 
 旧后端缺少 publication 或 status=unknown 时要求用户确认，不能凭借普通读取结果假定未发布。缺少节点、授权或该工具时记 SKIP/BLOCKED，不影响其他工具测试结果；报告单列 G 组，不能把它算成完整剧情写入验收。
+
+## H：节点新增与删除（可选，不调用模型）
+
+须明确 RUN_FLOW_STRUCTURE=true，且用户授权在指定专用测试故事中新建并删除测试节点。此组是规则 8 的独立例外，不隐含在 RUN_FLOW 或付费授权中。仅操作本轮新建节点和它们之间的连接，不能修改现有节点或其连线。确认实时 schema 有 addNodes/deleteNodes/cascadeDelete；缺少时 BLOCKED，不创建无法清理的节点。
+
+1. H01：记录现有图基线。用 addNodes 创建两个不带 entryNodeId/exitNodeId 的独立节点 A、C，带验收前缀，记录 addedNodeIds 和保存凭据并读回。不得猜测 ID。
+2. H02：新建 B，entryNodeId=A、exitNodeId=C，核对 A→B→C，B 的位置和空对话；已有图不变。
+3. H03：deleteNodes 删除 B，edgeHandling=auto，cascadeDelete=false。核对 deletedNodeIds 仅 B、A→C、B 缺失，既有图不变。
+4. H04：提交 A、C 的批量删除，但让 A rewire 到同批删除的 C，预期失败，读回 A、C 与路由不变。失败不能计为成功删除。
+5. H05：确认 A、C 自 H03 后未被外部修改，再删除 A，edgeHandling=disconnect、cascadeDelete=true。核对 A、C 均在 deletedNodeIds 且均已移除，原图与 H01 一致。出现外部引用、发布状态变化或无法确认数据时停止清理并记录残留 ID。
+
+本组不对原有发布节点发送破坏性探测，不覆盖所有游戏出口和并发场景。独立连线、选项、对话或 AI 子图能力不得据此标为通过。结果未知先读回；不能重放新增或自动改用其他删除策略。
 
 ## 清理与测试报告
 
@@ -204,3 +217,15 @@ E01/E02 不收费，默认执行：先重新读取大纲。E01 在末尾新增�
 ## 结论
 分别统计五类结果。只有必测项都通过，才可说“当前自动验收范围通过”；不能将部分跳过写成“全部功能通过”。
 ```
+
+## I. 选项与对话（插件 0.1.8，后端 3.30.1-preview.1）
+
+默认 RUN_FLOW_CONTENT=false。仅当用户明确开启，并指定专用测试故事时执行；不改原有节点。先检查实时 schema 六个内容分支，否则标记未部署。
+
+1. 新建两个独立普通节点 A/B，记录返回 UID。只在这些新节点内测试，结果未知先读回，禁止自动重放。
+2. A 新增指向 B 的选项，读回获取 choiceId；改文本、清除普通 targetNodeId=-1、恢复指向 B、删除选项，每步检查 saved/contentChanges 和读回。
+3. A 新增含 rawText 和两句 dialogues 的组件，读回 componentId/branchId；修改指定分支为一句，验证 rawText 省略时保留，新台词有新 ID。清空 dialogues 后核对，再删除组件。
+4. 提交不存在的 choiceId 或不属于故事的 characterId，要求拒绝且节点不变。不要通过写入原有发布节点探测保护。
+5. 只清理本组新建且未被其他修改引用的 A/B；不使用级联删除。若出现外部修改或未知结果，停止并报告残留 UID。记录调用、保存凭据、读回及清理结果，不记录 token。
+
+该组不验证付费生成、TTS、AI 子图或自动续期，不将其标为通过。
