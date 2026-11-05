@@ -1,9 +1,9 @@
 ---
 name: studio-characters
-description: Use when the user wants to read or edit character profiles in a saved CastLoop Studio SIT story through the connected MCP server.
+description: Use when the user wants to find a saved CastLoop Studio SIT story, read its story content or assets, or edit supported character profiles and outline entries through connected MCP tools.
 ---
 
-# CastLoop Studio SIT characters
+# CastLoop Studio SIT story editing
 
 Use the connected CastLoop Studio SIT MCP tools. This plugin operates on the test environment only.
 
@@ -36,3 +36,17 @@ If a request times out or its outcome is uncertain, read back before retrying. D
 ## Current scope
 
 Do not claim tools for character creation, image generation, voice assignment, phase/state changes, publishing, or background task recovery. Story listing/search is available only when `listStories` is actually exposed. Use only the tools actually exposed by this server. New tools must be implemented server-side and verified before these instructions expand.
+
+## Additional story reads (when exposed)
+
+Use `readStorySections` to read saved story metadata, worldInfo, outline, locations or items. Follow pagination when the requested scope exceeds one page. Outline positions are one-based. Reading an asset does not imply that asset creation, editing or generation tools are available.
+
+Use `readStoryNodes` for explicit relevant node UIDs, or `readStoryGraph` when complete cross-node context is necessary. Use stable node IDs, not display numbers or guessed titles. Respect effective outputs: explicit exits override stale legacy routes; insertion-ending conditions are not normal edges. Components preserve the saved dialogue data, including canonical and legacy representations; do not invent missing branches or IDs.
+
+If a graph/node result says `complete=false`, inspect its reason, omitted fields and missingNodeIds. Request fewer relevant nodes when detail is too large. Do not claim to have inspected omitted content or silently substitute another story/node.
+
+## Outline changes (when exposed)
+
+Use `patchStoryOutline` only for explicitly requested outline edits. Read the current outline first. Apply operations sequentially with one-based positions; update/remove must include the exact expectedName at that position after prior operations. Rename a chapter in place rather than adding a replacement. Do not infer deletion from omission. Omit remainingRequest: it is a Caster follow-up field, not an MCP execution instruction.
+
+This tool modifies the outline, not graph nodes or published content. Require the returned saved status and receipt to report a save. After uncertain outcomes, read back before retrying; replaying an add operation can create duplicates. If the requested tool is absent, explain the current server limitation instead of editing an archive through raw HTTP.
