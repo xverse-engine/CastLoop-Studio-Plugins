@@ -9,7 +9,11 @@ Use the connected CastLoop Studio SIT MCP tools. This plugin operates on the tes
 
 ## Establish the target
 
-Use the story ID explicitly provided by the user or already established in the conversation. If it is missing, ask for it; this version has no story listing tool. A user's open editor page is not proof of the target story or its saved state.
+Use the story ID explicitly provided by the user or already established in the conversation. If the user provides a story title or asks for their stories, use `listStories` when the connected server exposes it. Omit `query` to list stories or provide a title substring to search. Results are saved metadata, not story documents. Follow `nextOffset` as needed; do not treat an incomplete page as the complete search result.
+
+Resolve the target from returned `storyId` and `title` values. Duplicate titles remain separate stories: present the IDs and update times and ask the user to select when ambiguous. Do not choose a story merely because it is first or most recently updated. If no appropriate story is found, ask the user to clarify rather than guessing an ID. Recheck live permissions through the requested read or edit; search results do not grant access. A user's open editor page is not proof of the target story or its saved state.
+
+Older server deployments may not expose `listStories`. In that case, explain the limitation and ask for the explicit story ID; do not bypass the MCP connection with archive HTTP APIs.
 
 Use the host's account connection flow for login and consent. Never request passwords, cookies, bearer tokens or API keys in chat. Do not bypass this plugin with raw HTTP or use the user's local credential files.
 
@@ -31,4 +35,4 @@ If a request times out or its outcome is uncertain, read back before retrying. D
 
 ## Current scope
 
-Do not claim tools for character creation, image generation, voice assignment, phase/state changes, story browsing, publishing, or background task recovery. Use only the tools actually exposed by this server. New tools must be implemented server-side and verified before these instructions expand.
+Do not claim tools for character creation, image generation, voice assignment, phase/state changes, publishing, or background task recovery. Story listing/search is available only when `listStories` is actually exposed. Use only the tools actually exposed by this server. New tools must be implemented server-side and verified before these instructions expand.

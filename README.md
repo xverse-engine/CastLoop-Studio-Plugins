@@ -8,7 +8,7 @@ Agent plugins and MCP connection configurations for CastLoop Studio.
 
 | 插件 | 环境 | 版本 | 能力 |
 | --- | --- | --- | --- |
-| [CastLoop Studio SIT](plugins/castloop-studio-sit/README.md) | 测试环境 | 0.1.3 | 读取已保存故事的角色、修改已有角色的四项基础资料 |
+| [CastLoop Studio SIT](plugins/castloop-studio-sit/README.md) | 测试环境 | 0.1.4 | 查找作品、读取角色、修改已有角色的四项基础资料；查找需后端提供 `listStories` |
 
 当前市场仅提供 SIT 测试插件，需要测试环境账号和目标作品的编辑权限。正式版尚未提供，不用于正式作品。
 
@@ -17,13 +17,13 @@ Agent plugins and MCP connection configurations for CastLoop Studio.
 1. 打开插件目录，选择「添加 → 添加插件市场」。
 2. 来源填写 `https://github.com/xverse-engine/CastLoop-Studio-Plugins.git`。Git 引用留空以使用默认分支；稀疏路径留空。
 3. 在「CastLoop Studio 内部测试」市场中安装 CastLoop Studio SIT，按客户端提示登录授权。
-4. 在新会话中选择该插件，提供一个 SIT 测试故事 ID，先读取角色。
+4. 在新会话中选择该插件，指定 SIT 测试故事的名称或 ID，先读取角色。旧后端没有 `listStories` 时仍需提供 ID。
 
 示例：
 
 > 读取故事 <storyId> 的角色，先不要修改。
 
-当前没有作品搜索工具，必须提供明确的故事 ID。工具真正可调用、读取及修改保存成功，才代表连接与读写链路完成验收；技能开关或安装成功不代表已登录。
+名称搜索需后端部署 `listStories`，同名作品需先确认具体目标，不会自动选择第一项。工具真正可调用、读取及修改保存成功，才代表连接与读写链路完成验收；技能开关或安装成功不代表已登录。
 
 若曾添加后端仓库或本地目录作为同名市场来源，应通过客户端管理入口移除旧市场来源后再添加本仓库，避免同名市场冲突。无需手工修改个人 TOML 或插件缓存。
 
