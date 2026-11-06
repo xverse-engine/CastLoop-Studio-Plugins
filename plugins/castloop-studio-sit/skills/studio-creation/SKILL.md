@@ -45,7 +45,19 @@ A successful save returns `status: saved` and a save receipt. Read the affected 
 
 If a request times out or its outcome is uncertain, read back before retrying. Do not blindly replay writes, fall back to whole-archive replacement, or claim success without a save receipt. Report permission and validation failures accurately.
 
-## Current scope
+## Report changes clearly
+
+Use the actual saved entity name, type and change in user-facing summaries, not internal IDs alone. Keep stable IDs for tool calls, evidence, troubleshooting and disambiguating duplicate names. If shortening a long name or adding a translation, label it as an explanatory short name/translation, not a saved rename. For renames, state the old and new names. Never guess an ID from a name.
+
+For text edits, state the location and a short actual difference, for example “World settings → World rules: appended … at the end”. Do not copy the whole story. Distinguish tool-reported save, independent readback and user-confirmed Studio display. Claim other fields unchanged only when actually compared. Explain retained test changes and incomplete cleanup.
+
+Report only the requested outputs that actually completed. Character profiles, assigned voices, voice descriptions, images, synthesized speech and videos are separate results. An empty image after text-only creation is expected; a selected voice does not imply a voice description or audio was generated. Do not generate paid missing outputs merely to fill an empty card.
+
+`historyVersionKey` is a storage key returned by saving; it can repeat across saves. It is not a unique immutable version or an undo token. Confirm `status=saved` and independently read back affected data; do not infer success/failure from a changed/unchanged key. Skill wording does not prove the server's live tool descriptions have updated.
+
+For acceptance tests, follow the task sheet's short meaningful names and keep the full runId-to-entity-ID mapping in local evidence. Do not rename existing test entities to retrofit the new naming rule.
+
+## Supported execution scope
 
 Only use tools and parameter branches exposed by the connected server. This package's new instructions do not prove server deployment. Do not claim image generation, speech synthesis, publishing or background recovery from profile-editing tools. Do not bypass missing branches with raw HTTP or whole-archive replacement.
 
