@@ -37,6 +37,14 @@ Use `generate_cover_poster` for an explicitly requested single story cover. Pass
 
 Use the same accepted/taskIds/readImageTasks polling and retry rules as item images. Cover application saves coverPoster, linked canvas media and history. Do not automatically generate a cover when only item images were requested. No browser needs to remain open; save/close and reload Studio for comparison.
 
+## Location images and dialogue frames (only when exposed)
+
+Use `generate_location_images` for explicitly requested images of saved locations. Read locations first; pass `storyId`, `targets: [{locationId, assets: ["preview", "multiView"]}]`, `mode`, `requestId` and `reason`. Either asset can be requested independently. A requested multiview automatically generates its missing main image first; when both are regenerated, multiview references the new main. Regenerating only the main preserves the existing multiview. Do not infer image generation from location text edits.
+
+Use `generate_dialogue_frame` for one explicitly requested dialogue frame. Follow the live schema for optional referenceImageUrls: omission uses the saved cover, [] disables references. The server saves the complete nine-slice frame and selected URL, preserving theme/font. Do not treat a plain image as a complete dialogue frame.
+
+Both tools incur prompt/image charges and use the item-image submission and recovery rules. Keep original requestId and arguments. Poll returned taskIds in groups of at most 100 until saved/failed; a failed predecessor blocks its dependent image. For application_pending, poll again before repeating the original request to finish application. The server saves asset fields, canvas and image history. Save and close the same Studio story before generation; reload after completion. These instructions require live tool availability, not merely this plugin version. Character image generation and genAllImages are not supplied by this batch.
+
 ## Read
 
 Call `readStoryCharacters` with `storyId`. It reads the current authenticated user's saved editable draft, not unsaved browser changes. The default page size is 20; follow `nextOffset` when the requested list extends beyond a page. Character IDs for subsequent calls are positive decimal strings; copy them from tool results rather than guessing.

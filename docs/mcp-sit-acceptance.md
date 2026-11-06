@@ -1,6 +1,19 @@
 # CastLoop Studio SIT：Agent 自动验收任务书
 
-## 当前续测：道具与封面生图（3.30.3-preview.1）
+## 待部署续测：地点与完整对话框（2026-11-07）
+
+以下仅在对应后端部署、实时工具暴露后执行；插件 0.1.10 仅为说明更新。尚未指定新的 preview 标签。使用用户授权的专用测试故事和付费范围，先保存并关闭 Studio，保留生成结果供人工验收。
+
+1. 核对 generate_location_images / generate_dialogue_frame / readImageTasks 和实时 schema。缺失记 BLOCKED，不使用原始 HTTP 绕过。
+2. 选择没有图片的测试地点，单独请求 multiView。预期主图和多视图两个任务，多视图引用本次主图；轮询至 saved，读回两个 URL，核对图片历史和两条采用连线。
+3. 原 requestId、原参数重复提交应复用任务。新 requestId 的 fill_missing 应跳过已有图。改原请求参数应返回 request_id_conflict，不新建任务。
+4. 付费范围允许时，仅 regenerate 主图，读回确认多视图不变；仅 regenerate 多视图则主图不变且使用已选主图。再测两个地点同批；不以同时显示多个 slot 判定供应商并发超限。每次查询最多 100 个 taskId。
+5. 生成一次对话框，轮询到 saved，读取 uiCustomization.dialogueFrameUrl 和完整 dialogueFrame，核对切片、尺寸、边距，原主题和字体保留；在 Studio 确认显示、画布和历史。原请求复用与 fill_missing 不应额外生成。
+6. 部署历史修复后先查看原验收故事的道具历史，不为补历史重新生图。记录 actual model、application.appliedAt 和任务状态；application_pending 先继续轮询，持续未完成再以原参数补写。
+
+前置失败和等待期间删除目标已有隔离测试；撤权、多账号、服务重启及逐请求账单审计另行验证，不在正常付费验收中主动破坏账号或故事。角色生图和 genAllImages 本批未开放。报告为本地私有文件，不提交公开仓库。
+
+## 历史续测：道具与封面生图（3.30.3-preview.1）
 
 本节优先于下文历史验收范围。本轮目标为编辑器与后端 3.30.3-preview.1，配套插件 0.1.9；标签推送不代表 SIT 已部署。先核对实际工具和 schema，缺失则记 BLOCKED，不绕过 MCP 调用后端接口。插件技能已补充道具、封面指导，插件版本不能代替服务端能力验证。
 
