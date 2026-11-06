@@ -23,6 +23,14 @@ If no CastLoop tools are available, use the host's supported tool discovery firs
 
 Distinguish permission errors (insufficient_scope/forbidden) from token errors; do not repeatedly request login for an operation the account cannot perform. Do not claim this skill automatically refreshes credentials: refresh is handled by the client and authorization server. After connection recovery, read back any write whose outcome was uncertain before continuing; never automatically replay creation or generation. Report connection verification separately from story read/write verification.
 
+## Item images (only when exposed by the live server)
+
+Use `generate_item_images` for explicitly requested images of existing saved items. Read the target story/items first. Pass exact `storyId`, `targets: [{itemId}]`, `mode`, `requestId`, and `reason` according to the live schema. `fill_missing` preserves existing images; `regenerate` replaces selected item images. Prompt preparation and image generation can incur charges; do not infer image generation from requests to edit item descriptions.
+
+Choose one unique requestId for each intended generation and keep it in the task record. `accepted` only acknowledges submission: poll `readImageTasks` using returned taskIds with reasonable intervals. Report saved, failed and application_pending separately. If application_pending, repeat the original requestId/targets/mode to retry saving the existing result without generating again. Never change requestId automatically after a timeout or failure. A new paid generation requires user intent. Do not call generic HTTP task endpoints or consume backend-owned tasks.
+
+The backend saves item imageUrl, linked canvas media and image history without an open editor. Ask the user to save and close the same Studio story before testing and reload after completion; concurrent Studio autosave conflicts remain unresolved. Backend restarts do not guarantee automatic continuation. Only use these tools when actually available; do not treat this instruction as proof of deployment.
+
 ## Read
 
 Call `readStoryCharacters` with `storyId`. It reads the current authenticated user's saved editable draft, not unsaved browser changes. The default page size is 20; follow `nextOffset` when the requested list extends beyond a page. Character IDs for subsequent calls are positive decimal strings; copy them from tool results rather than guessing.

@@ -265,6 +265,17 @@ E01/E02 不收费，默认执行：先重新读取大纲。E01 在末尾新增�
 
 ## 体验与音色配置回归（2026-11-06）
 
+### 后续道具生图组（待部署，默认跳过）
+
+仅在实时 tools/list 暴露 generate_item_images/readImageTasks、用户授权付费且指定专用故事后执行。先保存并关闭 Studio 故事，不并行编辑同一故事。
+
+1. 创建或选定本轮两个专用道具，记录原 imageUrl 和画布。调用 fill_missing，一次包含两个 itemId，记录 requestId 与 taskIds。accepted 不计为通过；轮询至 saved/failed，分别记录每张结果。
+2. 用相同 requestId/targets/mode 重复请求，核对 taskIds 不变、无新增生成及节点；换 mode 但沿用该 requestId 应拒绝。
+3. 用新 requestId 执行 fill_missing，已生成的两个道具应跳过，不额外生图。经授权再用新 requestId regenerate 其中一个，核对另一道具不变、旧素材保留。
+4. 用户重开 Studio，确认道具直接采用新图、画布主图连线、图片历史可见。分别记录 MCP 独立读回与人工 UI 结果，不以任务 saved 代替 UI 验收。
+5. 若出现 application_pending，重复原请求只补写；若 failed，记录并停止，不自动新建付费任务。保存故障注入、进程重启与跨账号测试未执行时标 NOT_VERIFIED，不在普通验收中人为破坏服务。
+6. 报告计费证据、生成次数、实际模型、每项状态和残留素材；无计费明细时不要宣称“未重复扣费”已验证。保留测试图片供人工检查，不自动删除。
+
 - 名称与汇报：新测试采用短名称，原有对象不追溯改名；核对用户可辨认实体、具体变更和未生成的媒体。
 - J02：重新发现实际 tools/list，检查所有写工具 description 及 outputSchema.historyVersionKey.description，说明可重复、非唯一不可变版本、非撤销令牌。留存实际响应，不能以包版本代替；无需新增付费写入。
 - TTS：对专用角色记录顶层与旧 ttsConfig；授权精确选择已知有效音色后，核对保存响应两层 language/voiceIds 一致、未请求速度音量保持、精确选择不自动匹配。由用户在 Studio 打开、保存、重开，确认音色没有回退；未执行则记 NOT_VERIFIED。试听/合成另需明确授权，配置一致不等于播放通过。
