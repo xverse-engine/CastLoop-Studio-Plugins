@@ -31,6 +31,12 @@ Choose one unique requestId for each intended generation and keep it in the task
 
 The backend saves item imageUrl, linked canvas media and image history without an open editor. Ask the user to save and close the same Studio story before testing and reload after completion; concurrent Studio autosave conflicts remain unresolved. Backend restarts do not guarantee automatic continuation. Only use these tools when actually available; do not treat this instruction as proof of deployment.
 
+## Cover image (only when exposed)
+
+Use `generate_cover_poster` for an explicitly requested single story cover. Pass storyId, mode, requestId and reason. Optional referenceImageUrls overrides default references; [] means no references. Without an explicit selection, the server prefers main-character artwork followed by saved cover references. Artwork is not required. Follow the live schema: this initial implementation uses the fixed default image model, not the browser's selected model.
+
+Use the same accepted/taskIds/readImageTasks polling and retry rules as item images. Cover application saves coverPoster, linked canvas media and history. Do not automatically generate a cover when only item images were requested. No browser needs to remain open; save/close and reload Studio for comparison.
+
 ## Read
 
 Call `readStoryCharacters` with `storyId`. It reads the current authenticated user's saved editable draft, not unsaved browser changes. The default page size is 20; follow `nextOffset` when the requested list extends beyond a page. Character IDs for subsequent calls are positive decimal strings; copy them from tool results rather than guessing.
