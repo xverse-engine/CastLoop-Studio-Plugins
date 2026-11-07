@@ -1,8 +1,8 @@
 # CastLoop Studio SIT：Agent 自动验收任务书
 
-## 待部署续测：角色与五类整批生成（2026-11-07）
+## 当前验收：角色与五类整批生成（3.30.5-preview.2）
 
-本节覆盖下方较早批次“角色 / genAllImages 未开放”的限制。插件 0.1.11 为待发布指引，不代表服务已经部署；先检查实时工具表包含 generate_character_images、genAllImages 及 readImageTasks（当前实现共 22 工具、只读 6 个）。没有则 BLOCKED，不用 HTTP 绕过。尚未指定新 preview 标签。
+本轮目标为 Editor / Server 3.30.5-preview.2，配套插件 0.1.11。本节及下节地点/对话框为当前范围，覆盖历史批次“角色 / genAllImages 未开放”的限制。Git 推送不代表服务已部署；先确认 SIT 对应镜像部署完成，再检查实时工具表包含 generate_character_images、genAllImages 及 readImageTasks（当前实现共 22 工具、只读 6 个）。没有则 BLOCKED，不用 HTTP 绕过。
 
 前置：用户明确授权付费、指定可丢弃的专用测试故事，保存并关闭同一故事的 Studio 页面。本节允许在该测试故事内创建少量验收资产；如未获故事写入授权则先确认，不选择真实作品。默认只执行补缺；整批 regenerate 会重做所有图，需用户明确同意。多账号、服务重启、故障注入暂缓。保留结果，不自动恢复旧图或删除资产。
 
@@ -22,9 +22,9 @@
 
 轮询最多每组 100 个 taskIds，合理间隔；accepted 不是完成。application_pending 先继续等，持续未保存再复用原参数补写，不换 requestId。失败先报告，不自动重新付费生成。记录模型、sourceUrl、warnings、referenceImageUrls、application.appliedAt 和可获得的计费证据。验收报告保存在本地私有文件，禁止提交公开插件仓库。
 
-## 待部署续测：地点与完整对话框（2026-11-07）
+## 当前验收：地点与完整对话框（3.30.5-preview.2）
 
-以下仅在对应后端部署、实时工具暴露后执行；插件 0.1.10 仅为说明更新。尚未指定新的 preview 标签。使用用户授权的专用测试故事和付费范围，先保存并关闭 Studio，保留生成结果供人工验收。
+以下与上节共用 3.30.5-preview.2 / 插件 0.1.11，部署后核对实时工具再执行。使用用户授权的专用测试故事和付费范围，先保存并关闭 Studio，保留生成结果供人工验收。历史已通过的用例可引用证据，不默认重复收费生成。
 
 1. 核对 generate_location_images / generate_dialogue_frame / readImageTasks 和实时 schema。缺失记 BLOCKED，不使用原始 HTTP 绕过。
 2. 选择没有图片的测试地点，单独请求 multiView。预期主图和多视图两个任务，多视图引用本次主图；轮询至 saved，读回两个 URL，核对图片历史和两条采用连线。
@@ -33,7 +33,7 @@
 5. 生成一次对话框，轮询到 saved，读取 uiCustomization.dialogueFrameUrl 和完整 dialogueFrame，核对切片、尺寸、边距，原主题和字体保留；在 Studio 确认显示、画布和历史。原请求复用与 fill_missing 不应额外生成。
 6. 部署历史修复后先查看原验收故事的道具历史，不为补历史重新生图。记录 actual model、application.appliedAt 和任务状态；application_pending 先继续轮询，持续未完成再以原参数补写。
 
-前置失败和等待期间删除目标已有隔离测试；撤权、多账号、服务重启及逐请求账单审计另行验证，不在正常付费验收中主动破坏账号或故事。角色生图和 genAllImages 本批未开放。报告为本地私有文件，不提交公开仓库。
+前置失败和等待期间删除目标已有隔离测试；撤权、多账号、服务重启及逐请求账单审计另行验证，不在正常付费验收中主动破坏账号或故事。角色生图和 genAllImages 按上节验收。报告为本地私有文件，不提交公开仓库。
 
 ## 历史续测：道具与封面生图（3.30.3-preview.1）
 
