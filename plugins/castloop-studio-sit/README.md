@@ -1,6 +1,6 @@
 ﻿# CastLoop Studio SIT
 
-Codex 插件版本 **0.1.11**（配套 3.30.5-preview.2，部署后核对实时工具），仅连接 CastLoop Studio 测试环境。
+Codex 插件版本 **0.1.12**（补充 AI 剧情子图指引，须部署新后端；3.31.0-preview.1 尚无此分支），仅连接 CastLoop Studio 测试环境。
 
 ## 能力
 
@@ -12,7 +12,7 @@ Codex 插件版本 **0.1.11**（配套 3.30.5-preview.2，部署后核对实时�
 | `add/removeCharacterPhase/State` | 四个角色阶段/状态独立增删入口，不生图 |
 | `readStorySections` / `readStoryGraph` / `readStoryNodes` | 读取故事、资产和剧情 |
 | `patchStoryOutline` | 修改大纲，不直接修改剧情节点 |
-| `composeStoryFlow`（本批后端起完整支持下列范围） | 精确节点新增/修改/删除、选项文本与普通跳转、对话组件及分支台词编辑；不支持 AI 子图生成 |
+| `composeStoryFlow` | 精确节点/选项/对话编辑；新后端支持单个 AI 剧情子图生成并保存，可能收费，需实时 schema 暴露 generateSubgraphs |
 | `composeLocation` / `composeItem` / `composeWorldSetting` | 创建/修改资产文字资料与世界观，不生图 |
 | `generate_item_images` | 对已保存道具批量补缺图或重新生成，可能收费 |
 | `generate_cover_poster` | 生成单张故事封面，可指定参考图，可能收费 |
