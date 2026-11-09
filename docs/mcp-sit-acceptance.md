@@ -1,5 +1,20 @@
 # CastLoop Studio SIT：Agent 自动验收任务书
 
+## 最新综合验收：3.31.0-preview.2，作品、外部素材、任务管理（插件 0.1.13）
+
+本节优先于历史数量和限制。先记录实际 Editor/Server 镜像版本，确认已部署本批，实时工具数 28（只读授权 7），含 createStory/copyStory/uploadStoryAsset/applyStoryAsset/readGenerationTasks/manageGenerationTask。缺少则 BLOCKED，不用原始 HTTP 绕过。只操作本轮新建的可丢弃故事，保留结果供人工检查；不并行打开同一作品编辑。
+
+1. createStory 新建唯一名称草稿，sourceLanguage=en。读回 storyId、起点和旁白，确认未发布。copyStory 复制该作品，名称另加 Copy，核对新 ID、内容和原作未变化。超时先按名称查询，禁止盲重建。协作者复制不支持，留待多账号测试。
+2. 在新故事创建一个测试道具。使用用户提供或明确授权的测试 PNG 和音频/视频，通过 sourceUrl 或小文件 base64 上传。核对返回 assetId、保存凭据和画布节点；无授权素材则该项 BLOCKED，不自行上传私人文件。对 PNG 调 applyStoryAsset 应用到测试道具，读回图片和连线，重复应用应不重复建素材节点；音频可应用默认 BGM，原音量保留；视频本批只验证素材库和画布，不绑定对白。
+3. 不调用供应商的拒绝测试：将 HTML 编码为 base64 并命名 .png，应 invalid_input、无新素材；不存在的 assetId 应失败，不改故事。不要访问内网或无权作品来人为制造测试。
+4. 用户本轮明确允许付费时，在本轮道具提交一次生图，记录 requestId 与 taskIds，查询 readGenerationTasks/readImageTasks，等待 saved 并读回。对已成功任务 cancel 应 not_cancelled，不应退款或重新生成；retry_application 应复用原结果。最多一次新的图片生成，不默认运行 genAllImages。
+5. 排队取消需要实际 pending 窗口：若没有自然排队中的本轮任务，记 NOT_COVERED，不为测试大量付费压满队列。若有，cancel 后确认 cancelled，画布反映取消且无后续结果。running 时不得声称已取消。
+6. 付费重试仅在本轮自然出现 failed 且用户确认供应商结果、同意再收费后执行，requestId 固定、allowNewCharge=true。重复同一请求应返回相同新 taskId，保留原失败任务，不重复启动；最多一次重试。无失败样本记 NOT_COVERED，不故意破坏服务。
+7. 执行下方 AI 子图增量用例（最多两次剧情生成）；若本轮未授权模型费用则跳过付费项而非整轮停测。readGenerationTasks 可查询子图，恢复仍用原 composeStoryFlow 请求。无需重跑所有历史生图用例。
+8. 人工打开 Studio 检查新建/复制故事、素材库、画布、道具/BGM、生成结果和子图，保存刷新后保留。Caster 新增能力为零，原页面确认/生图路径做一次已有样本冒烟即可，不要求额外付费。
+
+报告逐项 PASS/FAIL/BLOCKED/NOT_COVERED，列实际请求/故事/素材/任务 ID、费用次数、保留结果和人工待验项。上传/新建/复制无持久化请求去重；本批也不承诺全类型取消、后台批次接管和多端保存冲突处理。报告与用户素材不提交公开 Git。
+
 ## 最新增量：AI 剧情子图（插件 0.1.12，待新后端部署）
 
 本节优先于历史“子图未开放”描述。3.31.0-preview.1 不含生成执行链路；先记录用户实际部署版本，并检查 composeStoryFlow 实时 schema 有 generateSubgraphs 和 requestId。没有则 BLOCKED，不尝试绕过 MCP。工具总数仍为 22，旧图像回归无需重跑。

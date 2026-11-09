@@ -1,11 +1,14 @@
-﻿# CastLoop Studio SIT
+# CastLoop Studio SIT
 
-Codex 插件版本 **0.1.12**（补充 AI 剧情子图指引，须部署新后端；3.31.0-preview.1 尚无此分支），仅连接 CastLoop Studio 测试环境。
+Codex 插件版本 **0.1.13**，配套 Editor/Server **3.31.0-preview.2**，仅连接测试环境。先确认后端已部署，再按实时 schema 调用；不以插件版本推断服务能力。
 
 ## 能力
 
 | 工具 | 用途 |
 | --- | --- |
+| `createStory` / `copyStory` | 新建空白草稿、复制自己拥有的作品；不确定响应先查询，勿盲重试 |
+| `uploadStoryAsset` / `applyStoryAsset` | 上传图片/音频/视频到素材库和画布，并应用已有素材；本地小文件上限 512 KiB，URL 上限 32 MiB |
+| `readGenerationTasks` / `manageGenerationTask` | 查询 MCP 任务；图片排队取消、补存成功结果、明确授权后重新付费生成 |
 | `listStories` | 列出可操作的故事，或按名称片段搜索；支持分页，同名作品分别返回。需后端部署该工具 |
 | `readStoryCharacters` | 读取已保存故事的角色，支持分页及指定角色 |
 | `composeCharacter` | 统一新建/修改角色：资料生成、音色/TTS 设置和阶段状态批量操作；需实时 schema 支持 |

@@ -7,6 +7,14 @@ description: Use when the user wants to find a saved CastLoop Studio SIT story, 
 
 Use the connected CastLoop Studio SIT MCP tools. This plugin operates on the test environment only.
 
+## Workspace and task management (only when exposed)
+
+Use createStory for an explicitly requested new empty draft, and copyStory for a new unpublished copy of an owned story. Keep the returned storyId; do not silently switch the established target. Neither operation is idempotent: after a timeout search listStories before repeating. Copying a collaborator's story is not supported in this batch.
+
+Use uploadStoryAsset with filename and exactly one public sourceUrl (up to 32 MiB) or base64 (up to 512 KiB decoded). Supported formats are PNG/JPEG/WebP, MP3/WAV and MP4/WebM. Do not read or upload unrelated local files. Larger local files require Studio's upload UI/API, not splitting into multiple fake assets. Successful uploads appear on the canvas. If applicationStatus=pending, retain assetId and retry applyStoryAsset instead of uploading again. This applies an existing story-owned asset to canvas, an image target or default BGM. Read the exact entity and character phase/state first. It does not generate, crop avatars, split dialogue frames or bind videos to dialogue nodes.
+
+readGenerationTasks lists the current account's MCP image and story-subgraph tasks; use retained taskIds for exact queries, since the default list is bounded active/recent records. manageGenerationTask applies only to individual MCP image tasks. cancel stops pending work only and does not promise a provider abort or refund. retry_application saves an existing successful result without new generation. retry_generation requires a failed task, explicit user intent for a new charge, allowNewCharge=true and a new stable requestId. Verify uncertain provider outcomes first; do not automatically retry failure or running tasks. Reuse that requestId for transport retries. This creates a new node/task while retaining the original. Subgraphs resume with original composeStoryFlow arguments, not this image control tool. Check actual status/read back; accepted is not saved.
+
 ## Establish the target
 
 Use the story ID explicitly provided by the user or already established in the conversation. If the user provides a story title or asks for their stories, use `listStories` when the connected server exposes it. Omit `query` to list stories or provide a title substring to search. Results are saved metadata, not story documents. Follow `nextOffset` as needed; do not treat an incomplete page as the complete search result.
