@@ -1,8 +1,16 @@
 # CastLoop Studio SIT：Agent 自动验收任务书
 
-## 待发布：导入完整性与缺失图片选择（2026-11-10）
+## 本轮验收：3.31.0-preview.5／插件 0.1.16（2026-11-10）
 
-以下为源码增量，尚未部署。先确认实时 importStory schema 有 allowMissingAssets，再执行。
+本轮一起验收第三批与导入修复。先核对实际后端版本、插件版本和实时 schema；按以下三组执行，不必重跑全部历史付费生成：
+
+- 导入完整性与缺图选择：执行紧接本段的 1–4 项，Editor 往返及缺图提示由用户人工确认。
+- 同步修改重复请求保护：执行文末“重复请求与独立生成任务控制”的 requestId 用例，确认完全相同请求不重复创建、复制或应用；参数改变不能沿用原 ID。
+- 独立生成任务管理：执行同节的查询、取消与 retry_generation 用例。重新生成仅在用户授权付费、存在合适失败样本时执行；无样本标 NOT_OBSERVED，不人为破坏供应商或取消他人任务。
+
+## 导入完整性与缺失图片选择
+
+先确认本轮部署回执及实时 importStory schema 有 allowMissingAssets，再执行；若版本未部署或参数缺失，标 BLOCKED。
 
 1. 对同一授权故事做 JSON 往返，逐条对比普通出口、显式选项、限时选项超时、QTE 成功／失败和旧格式跳转；新 ID 可以不同，去向语义必须一致。悬空目标应返回 invalid_story_routes 及 nodeId/targetId，不能保存为成功。核对旁白及其他角色的语言、音色、语速、音量等完整配置，包括 enabled=false 和未显式指定音色的默认设置。
 2. 使用已知缺失图片的授权测试文件（不得删除线上素材来制造错误）。默认返回 import_missing_assets 和 missingAssetDetails；先让用户选择取消或图片留空继续。仅明确选择继续时使用 allowMissingAssets=true 和新的 requestId。返回 summary.missingImages 为去重图片数；读回相关图片字段为空且资产保留 importMissingAssets 标记。权限／网络／桶故障必须失败，不得清空图片。
@@ -448,9 +456,9 @@ E01/E02 不收费，默认执行：先重新读取大纲。E01 在末尾新增�
 权限负例只做本账号可安全验证的参数/只读 scope；多账号仍可稍后测。不要为了造失败而破坏服务或取消真实生成。失败/超时先查询原任务并记录，不自动发起新的收费请求。用户人工确认图片/音视频效果与播放；无用户确认记 NOT_VERIFIED。若要验证页面关闭独立执行，需用户明确确认页面关闭期间任务完成。报告记录 taskId、requestId、实际状态、产物 URL、是否应用、费用证据及未覆盖项；不含令牌、密钥、授权 URL。不提交公开仓库的用户测试证据。
 
 
-## 下一批待部署：重复请求与独立生成任务控制
+## 重复请求与独立生成任务控制（preview.5）
 
-仅在后端实时 schema 出现 composeCharacter.requestId 且 manageGenerationTask 说明支持 standalone 后执行；当前 0.1.15 / preview.4 验收不受影响。不要凭此文档认定已经部署。
+本节为插件 0.1.16／3.31.0-preview.5 增量。仅在实时 schema 出现 composeCharacter.requestId 且 manageGenerationTask 说明支持 standalone 后执行；不要凭文档认定已经部署。
 
 1. 在授权草稿上使用稳定 requestId 创建测试角色或作品，重复完全相同的请求，确认返回同一 ID、只新增一次；更改参数但复用 ID 应 request_id_conflict。测试 composeCharacter 精确更新时无需模型调用。导入/复制/素材上传同样验证返回 ID 不重复。
 2. 独立生成一次用户授权的最小文本任务；轮询 readMediaTasks，核对 canCancel、canRetryGeneration、nextStep。成功后重复原 generateMedia 参数应复用任务，不重新收费。
