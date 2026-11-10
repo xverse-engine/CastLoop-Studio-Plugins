@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Document stable requestId receipts for synchronous mutations and standalone media cancellation/explicit paid retry.
+- Add next-release acceptance cases and production configuration checklist.
+- Keep installed SIT version 0.1.15 and current deployment unchanged until release.
+
+
 ## 0.1.13 — 2026-11-09
 
 - 增加新建/复制作品、外部图片/音频/视频上传及应用的条件式工具指引。

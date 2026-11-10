@@ -437,3 +437,16 @@ E01/E02 不收费，默认执行：先重新读取大纲。E01 在末尾新增�
 | M09 | 用户明确要求时将 M02 图片上传并应用到本轮测试道具/画布，或将 M04 候选应用到测试 BGM | 使用既有 uploadStoryAsset/applyStoryAsset；生成与应用分别记录，应用成功后独立读回。受现有上传限制，超限不得拆分规避 |
 
 权限负例只做本账号可安全验证的参数/只读 scope；多账号仍可稍后测。不要为了造失败而破坏服务或取消真实生成。失败/超时先查询原任务并记录，不自动发起新的收费请求。用户人工确认图片/音视频效果与播放；无用户确认记 NOT_VERIFIED。若要验证页面关闭独立执行，需用户明确确认页面关闭期间任务完成。报告记录 taskId、requestId、实际状态、产物 URL、是否应用、费用证据及未覆盖项；不含令牌、密钥、授权 URL。不提交公开仓库的用户测试证据。
+
+
+## 下一批待部署：重复请求与独立生成任务控制
+
+仅在后端实时 schema 出现 composeCharacter.requestId 且 manageGenerationTask 说明支持 standalone 后执行；当前 0.1.15 / preview.4 验收不受影响。不要凭此文档认定已经部署。
+
+1. 在授权草稿上使用稳定 requestId 创建测试角色或作品，重复完全相同的请求，确认返回同一 ID、只新增一次；更改参数但复用 ID 应 request_id_conflict。测试 composeCharacter 精确更新时无需模型调用。导入/复制/素材上传同样验证返回 ID 不重复。
+2. 独立生成一次用户授权的最小文本任务；轮询 readMediaTasks，核对 canCancel、canRetryGeneration、nextStep。成功后重复原 generateMedia 参数应复用任务，不重新收费。
+3. 排队取消仅在自然观察到 pending 时尝试；若已 running，应 not_cancelled，继续观察结果。不要为捕获排队人为批量启动付费任务。未遇到 pending 标记 NOT_OBSERVED，竞态由自动测试覆盖。
+4. 有真实 failed 任务且用户已授权再次收费时，用 manageGenerationTask/retry_generation、allowNewCharge=true 和稳定新 requestId；重复该管理请求应复用新 taskId。原任务保留。无失败样本不人为破坏供应商，标记 NOT_OBSERVED。视频提交成功但实际运行未失败时不能重试。
+5. operation_outcome_unknown 必须读回后再决定；不得自动换 ID。线上不注入数据库/网络故障。取消失败不代表退款，accepted 不代表保存。
+
+结果记录后端版本、taskId/故事 ID、真实收费和读回结论；禁止记录令牌、签名链接或用户故事正文。
