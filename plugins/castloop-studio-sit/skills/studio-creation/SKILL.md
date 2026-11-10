@@ -7,6 +7,15 @@ description: Use when the user wants to find a saved CastLoop Studio SIT story, 
 
 Use the connected CastLoop Studio SIT MCP tools. This plugin operates on the test environment only.
 
+## Project JSON import/export (only when exposed)
+
+Use exportStory for saved portable JSON. It returns downloadUrl (one hour), expiresAt, filename and bytes. Download directly to a user-selected file without printing or loading the document into model context. It contains media references, not packaged bytes. Browser changes must be saved first; no ZIP or published build.
+
+For import, get ONLY the byte size of the user-selected JSON file. Call prepareStoryImport(bytes). Use a local HTTP client to PUT the exact file to uploadUrl with ALL returned headers, including Content-Length and private ACL. For example curl.exe --fail --silent --show-error --request PUT --upload-file <path> with the returned headers. Do not print/read the JSON into context or base64-encode it. After successful HTTP upload call importStory(uploadId, name?). Clients without local upload capability must report that limitation and use Studio, not pretend to upload.
+
+Import creates a NEW owned unpublished story, never overwrites, copies Studio media under existing quota, preserves external references, and detaches old tasks. No AI charge. Default JSON file limit is 20 MiB (server configurable); MCP arguments stay small. No ZIP. Temporary objects are cleaned after 24 hours by an hourly sweep. URLs and uploadId are temporary credentials: never publish them in reports. Keep the new storyId and read back graph/assets. Import is not idempotent: after uncertain save check returned storyId or search listStories before retry. If tools are absent report deployment mismatch, never use raw save APIs.
+
+
 ## Workspace and task management (only when exposed)
 
 Use createStory for an explicitly requested new empty draft, and copyStory for a new unpublished copy of an owned story. Keep the returned storyId; do not silently switch the established target. Neither operation is idempotent: after a timeout search listStories before repeating. Copying a collaborator's story is not supported in this batch.

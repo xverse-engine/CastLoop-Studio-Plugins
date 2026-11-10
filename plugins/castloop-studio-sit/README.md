@@ -1,11 +1,12 @@
 # CastLoop Studio SIT
 
-Codex 插件版本 **0.1.14**（第二批配套更新，配套后端 3.31.0-preview.3，待真实生成验收），仅连接测试环境。先确认后端已部署，再按实时 schema 调用；不以插件版本推断服务能力。
+Codex 插件版本 **0.1.15**（JSON 导入导出增量，尚未发布；3.31.0-preview.3 不包含本增量），仅连接测试环境。先确认后端已部署，再按实时 schema 调用；不以插件版本推断服务能力。
 
 ## 能力
 
 | 工具 | 用途 |
 | --- | --- |
+| `exportStory` / `prepareStoryImport` / `importStory` | 临时下载链接、凭证直传 JSON 再导入新草稿（默认 20 MiB）；需配套后端部署，不覆盖原作；不含 ZIP |
 | `createStory` / `copyStory` | 新建空白草稿、复制自己拥有的作品；不确定响应先查询，勿盲重试 |
 | `uploadStoryAsset` / `applyStoryAsset` | 上传图片/音频/视频到素材库和画布，并应用已有素材；本地小文件上限 512 KiB，URL 上限 32 MiB |
 | `readGenerationTasks` / `manageGenerationTask` | 查询 MCP 任务；图片排队取消、补存成功结果、明确授权后重新付费生成 |
