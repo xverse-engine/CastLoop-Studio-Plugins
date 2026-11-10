@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add import integrity, narrator voice preservation, explicit missing-image choices and result summary guidance; include Editor round-trip checks. Requires the corresponding server update.
+
 - Document stable requestId receipts for synchronous mutations and standalone media cancellation/explicit paid retry.
 - Add next-release acceptance cases and production configuration checklist.
 - Keep installed SIT version 0.1.15 and current deployment unchanged until release.

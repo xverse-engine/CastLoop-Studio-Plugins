@@ -1,5 +1,14 @@
 # CastLoop Studio SIT：Agent 自动验收任务书
 
+## 待发布：导入完整性与缺失图片选择（2026-11-10）
+
+以下为源码增量，尚未部署。先确认实时 importStory schema 有 allowMissingAssets，再执行。
+
+1. 对同一授权故事做 JSON 往返，逐条对比普通出口、显式选项、限时选项超时、QTE 成功／失败和旧格式跳转；新 ID 可以不同，去向语义必须一致。悬空目标应返回 invalid_story_routes 及 nodeId/targetId，不能保存为成功。核对旁白及其他角色的语言、音色、语速、音量等完整配置，包括 enabled=false 和未显式指定音色的默认设置。
+2. 使用已知缺失图片的授权测试文件（不得删除线上素材来制造错误）。默认返回 import_missing_assets 和 missingAssetDetails；先让用户选择取消或图片留空继续。仅明确选择继续时使用 allowMissingAssets=true 和新的 requestId。返回 summary.missingImages 为去重图片数；读回相关图片字段为空且资产保留 importMissingAssets 标记。权限／网络／桶故障必须失败，不得清空图片。
+3. Editor 文件导入也创建新故事；完成后展示数量和缺失清单，可以选择打开新故事或留在原故事。打开详情、刷新后仍能看到缺图提示；修复图片后对应提示消失。确认原故事的节点、图片、音色均未被替换。
+4. prepareStoryImport 超限应返回 invalid_file_size/maxBytes。保存结果未知保留 storyId 并先查作品，不盲目重新导入。报告只保留结果，不包含存档正文、签名 URL、uploadId 或凭证。
+
 ## 3.31.0-preview.4：项目 JSON 导入导出（插件 0.1.15）
 
 配套后端为 3.31.0-preview.4；部署完成后再测试。先确认实时工具包含 exportStory/prepareStoryImport/importStory，再开始；缺失记 BLOCKED，不绕过 MCP。总工具 33，只读 9。本组不生成、不收费，只在用户授权的新建可丢弃草稿测试。
