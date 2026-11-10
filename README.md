@@ -8,7 +8,7 @@ Agent plugins and MCP connection configurations for CastLoop Studio.
 
 | 插件 | 环境 | 版本 | 能力 |
 | --- | --- | --- | --- |
-| [CastLoop Studio SIT](plugins/castloop-studio-sit/README.md) | 测试环境 | 0.1.13 | 作品、素材与任务管理，五类生图及 AI 剧情子图；配套 3.31.0-preview.2，须核对实际部署和实时 schema |
+| [CastLoop Studio SIT](plugins/castloop-studio-sit/README.md) | 测试环境 | 0.1.14 | 增加独立文本、图片、语音、音乐、视频生成指引；配套后端 3.31.0-preview.3，待真实生成验收，以实时 schema 为准 |
 
 当前市场仅提供 SIT 测试插件，需要测试环境账号和目标作品的编辑权限。正式版尚未提供，不用于正式作品。
 

@@ -1,6 +1,6 @@
 # CastLoop Studio SIT
 
-Codex 插件版本 **0.1.13**，配套 Editor/Server **3.31.0-preview.2**，仅连接测试环境。先确认后端已部署，再按实时 schema 调用；不以插件版本推断服务能力。
+Codex 插件版本 **0.1.14**（第二批配套更新，配套后端 3.31.0-preview.3，待真实生成验收），仅连接测试环境。先确认后端已部署，再按实时 schema 调用；不以插件版本推断服务能力。
 
 ## 能力
 
@@ -19,13 +19,14 @@ Codex 插件版本 **0.1.13**，配套 Editor/Server **3.31.0-preview.2**，仅�
 | `composeLocation` / `composeItem` / `composeWorldSetting` | 创建/修改资产文字资料与世界观，不生图 |
 | `generate_item_images` | 对已保存道具批量补缺图或重新生成，可能收费 |
 | `generate_cover_poster` | 生成单张故事封面，可指定参考图，可能收费 |
-| `generate_location_images` | 批量地点主图/多视图，自动补缺失主图并引用；待部署，可能收费 |
-| `generate_dialogue_frame` | 单张对话框及完整九宫格结果；待部署，可能收费 |
-| `generate_character_images` | 按阶段/状态选择立绘、头像、多视图；头像裁剪免费，立绘及多视图可能收费；待部署 |
-| `genAllImages` | 五类图片统一批次，角色仅默认阶段/状态，封面和对话框各一张；待部署，可能收费 |
+| `generate_location_images` | 批量地点主图/多视图，自动补缺失主图并引用；可能收费 |
+| `generate_dialogue_frame` | 单张对话框及完整九宫格结果；可能收费 |
+| `generate_character_images` | 按阶段/状态选择立绘、头像、多视图；头像裁剪免费，立绘及多视图可能收费 |
+| `genAllImages` | 五类图片统一批次，角色仅默认阶段/状态，封面和对话框各一张；可能收费 |
 | `readImageTasks` | 查询已提交图片任务与结果写回状态 |
+| `generateMedia` / `readMediaTasks` | 独立文本、通用图片、语音、纯音乐、文生视频；稳定请求 ID、异步查询，不自动覆盖故事 |
 
-故事读改仍使用明确的 storyId 和作品编辑权限；可先通过 listStories 将名称解析为 ID，重名时由用户确认。旧后端未提供列表时仍手动指定 ID，未开放新参数时保留基础修改范围。上述新增能力需后端部署，不能仅凭插件版本判断可用。默认 Narrator 受保护；读取线上已保存的可编辑草稿，不包含浏览器未保存内容。生图须明确请求，提交任务不代表结果已保存；轮询后独立读回核对。不提供语音合成或发布能力。
+故事读改仍使用明确的 storyId 和作品编辑权限；可先通过 listStories 将名称解析为 ID，重名时由用户确认。旧后端未提供列表时仍手动指定 ID，未开放新参数时保留基础修改范围。上述新增能力需后端部署，不能仅凭插件版本判断可用。默认 Narrator 受保护；读取线上已保存的可编辑草稿，不包含浏览器未保存内容。生图须明确请求，提交任务不代表结果已保存；轮询后独立读回核对。独立语音合成需新后端 generateMedia；不提供发布能力。
 
 ## 连接配置
 
