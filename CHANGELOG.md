@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Add conditional applyStoryAsset requestId guidance and acceptance checks for replay, changed targets and preserving later manual image choices. Requires a later Server deployment; preview.5 does not expose this parameter.
+
 ## 0.1.16 — 2026-11-10
 
 - Add import integrity, narrator voice preservation, explicit missing-image choices and result summary guidance; include Editor round-trip checks. Requires the corresponding server update.
