@@ -1,5 +1,15 @@
 # CastLoop Studio SIT：Agent 自动验收任务书
 
+## 2026-11-10 验收勘误与待发布复测
+
+本节不代表新版本已部署。0.1.13 原报告保留，不重写历史结果。
+
+- Narrator 使用隐式旁白身份，`speaker=Narrator` 且省略 `characterId` 合法，不要求绑定 ID 1。普通角色映射必须用已存在的普通角色单独验证；只有旁白样本时记普通角色映射 NOT_COVERED。不得据此要求再次付费生成，沿用后续授权预算。
+- “出口可达”仅证明存在路径；若用户要求所有路线返回出口，需逐条核对所有生成终点。存在未回接终点时，该指令遵循项记 FAIL/部分满足，不能用出口可达替代。本轮报告已保留此限制，不自动重生。
+- 待后端修复部署后，复制作品应返回真实 `historyVersionKey`，读回内容仍需独立核对。`readStorySections(story)` 应返回已有 `bgm.defaultUrl/title/volume`，核对音频应用和音量保持。
+- 待修复部署后，`readGenerationTasks` 默认列表包含最近 30 分钟已保存/已取消记录；最多 100 条，仍需保留任务 ID 以做精确查询。超出时间/数量窗口不视为任务丢失。
+- pending 取消和自然失败重试保持 NOT_COVERED，直到观察到相应真实状态；不通过大量付费生成或破坏服务制造样本。素材库、画布播放与刷新仍由人工核验，不用保存回执代替。
+
 ## 最新综合验收：3.31.0-preview.2，作品、外部素材、任务管理（插件 0.1.13）
 
 本节优先于历史数量和限制。先记录实际 Editor/Server 镜像版本，确认已部署本批，实时工具数 28（只读授权 7），含 createStory/copyStory/uploadStoryAsset/applyStoryAsset/readGenerationTasks/manageGenerationTask。缺少则 BLOCKED，不用原始 HTTP 绕过。只操作本轮新建的可丢弃故事，保留结果供人工检查；不并行打开同一作品编辑。
