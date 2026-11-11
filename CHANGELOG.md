@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- 补充 3.31.0-preview.6 收尾验收：画布缺图标志、故事内替换／故事外新建导入，以及素材应用重放。插件包保持 0.1.16；排队取消和失败付费重试无自然样本时明确记未观察，不制造收费测试。
+
 - Add conditional applyStoryAsset requestId guidance and acceptance checks for replay, changed targets and preserving later manual image choices. Requires a later Server deployment; preview.5 does not expose this parameter.
 
 ## 0.1.16 — 2026-11-10
