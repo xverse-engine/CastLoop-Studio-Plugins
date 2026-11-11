@@ -1,0 +1,24 @@
+{
+  "name": "castloop-studio",
+  "version": "1.0.0",
+  "description": "Create with CastLoop Studio: find stories, edit scripts and assets, generate media and save results to your projects.",
+  "author": { "name": "CastLoop" },
+  "interface": {
+    "displayName": "CastLoop Studio",
+    "shortDescription": "用对话创作故事、角色和素材",
+    "longDescription": "连接 CastLoop Studio，用对话编写剧情、完善角色、世界观和大纲，生成图片、语音、音乐及视频，管理任务并保存结果。支持故事查找、新建、复制及项目 JSON 导入导出。需要 Studio 账号和相应作品权限；生成可能收费，不提供发布能力。",
+    "developerName": "CastLoop",
+    "category": "Creativity",
+    "logo": "./assets/icon.png",
+    "composerIcon": "./assets/icon.png",
+    "logoDark": "./assets/icon.png",
+    "composerIconDark": "./assets/icon.png",
+    "capabilities": ["Read", "Write"],
+    "defaultPrompt": [
+      "介绍一下你能怎样帮我创作，先不要修改故事或生成素材。",
+      "读取我指定的故事，概括当前内容并提出三个可以继续推进的方向，等我选择。"
+    ]
+  },
+  "skills": "./skills",
+  "mcpServers": "./.mcp.json"
+}

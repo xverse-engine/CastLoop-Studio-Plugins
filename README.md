@@ -8,16 +8,17 @@ Agent plugins and MCP connection configurations for CastLoop Studio.
 
 | 插件 | 环境 | 版本 | 能力 |
 | --- | --- | --- | --- |
+| [CastLoop Studio](plugins/castloop-studio/README.md) | 正式环境 | 1.0.0 | 故事创作、角色和资产编辑、生成服务、任务管理与项目 JSON 导入导出 |
 | [CastLoop Studio SIT](plugins/castloop-studio-sit/README.md) | 测试环境 | 0.1.16 | 导入完整性、缺图选择、重复请求保护及独立任务管理；配套后端 3.31.0-preview.5，以实时 schema 和部署回执为准 |
 
-当前市场仅提供 SIT 测试插件，需要测试环境账号和目标作品的编辑权限。正式版尚未提供，不用于正式作品。
+正式作品选择 **CastLoop Studio**；测试作品选择 **CastLoop Studio SIT**。两者连接不同环境，需要对应环境的账号和作品权限。
 
 ## 在 Codex 中安装
 
 1. 打开插件目录，选择「添加 → 添加插件市场」。
 2. 来源填写 `https://github.com/xverse-engine/CastLoop-Studio-Plugins.git`。Git 引用留空以使用默认分支；稀疏路径留空。
-3. 在「CastLoop Studio 内部测试」市场中安装 CastLoop Studio SIT，按客户端提示登录授权。
-4. 在新会话中选择该插件，指定 SIT 测试故事的名称或 ID，先读取角色。旧后端没有 `listStories` 时仍需提供 ID。
+3. 在「CastLoop Studio」市场中安装 **CastLoop Studio**，按客户端提示登录授权；测试环境安装名称带 SIT 的插件。
+4. 在新会话中选择插件，即可说明创作需求；需要操作作品时再指定故事名称或 ID。也可以从 Studio 的「连接外部 Agent」入口打开 Codex。
 
 示例：
 
@@ -35,11 +36,14 @@ Agent plugins and MCP connection configurations for CastLoop Studio.
 
 通过客户端支持的市场刷新、插件更新流程获取新版本，必要时重启并开启新会话。不保证每次提交后已打开的会话即时更新。
 
-后续正式版使用 `plugins/castloop-studio/`，SIT 保留 `plugins/castloop-studio-sit/`；分别使用不同插件 ID、MCP 地址和 OAuth 应用，版本独立维护。当前不提供占位的正式版安装项。正式发布时默认市场只列正式版，SIT 另设测试市场入口。
+正式版使用 `plugins/castloop-studio/`，SIT 使用 `plugins/castloop-studio-sit/`；分别使用不同插件 ID、MCP 地址和 OAuth 应用，版本独立维护。保留现有市场 ID `castloop-studio-development`，只将展示名改为 CastLoop Studio，已有用户无需更换市场来源。正式插件在列表前方，SIT 保留供内部测试。
+
+两包使用相同创作指引与图标。维护共享内容后运行 `python scripts/sync-shared-plugin-files.py`，校验用 `python scripts/sync-shared-plugin-files.py --check`；只有环境说明不同，OAuth 配置独立维护。Git 默认分支直接提供安装与更新，不要求创建 GitHub Release。
 
 ## 仓库内容
 
-- `.agents/plugins/marketplace.json`：当前测试市场清单，路径相对于仓库根目录。
+- `.agents/plugins/marketplace.json`：正式／测试插件市场清单，路径相对于仓库根目录。
+- `plugins/castloop-studio/`：正式环境插件配置、创作 Skill 和图标。
 - `plugins/castloop-studio-sit/`：已验收的 Codex 插件配置、角色操作 Skill 和图标。
 - `CHANGELOG.md`：发布与迁移记录。
 

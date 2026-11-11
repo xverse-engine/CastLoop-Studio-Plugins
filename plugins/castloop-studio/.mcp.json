@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "castloop-studio": {
+      "type": "http",
+      "url": "https://studio.castloop.ai/mcp",
+      "scopes": ["openid", "studio:read", "studio:write", "offline_access"],
+      "oauth": {
+        "clientId": "zl6mpa97xs5zdjt3by7pr",
+        "callbackUrl": "http://127.0.0.1/callback"
+      }
+    }
+  }
+}

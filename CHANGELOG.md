@@ -1,5 +1,11 @@
 # Changelog
 
+## CastLoop Studio 1.0.0 — 2026-11-11
+
+- 增加独立正式环境插件，连接 studio.castloop.ai/mcp 和 HK Logto 的正式公共客户端；保留 SIT 插件及其认证配置。
+- 市场展示名改为 CastLoop Studio，保留市场身份以兼容已安装用户。
+- 共用创作指引与图标，增加同步校验脚本；通过 Git 市场分发，无需 GitHub Release。
+
 ## Unreleased
 
 - 补充 3.31.0-preview.6 收尾验收：画布缺图标志、故事内替换／故事外新建导入，以及素材应用重放。插件包保持 0.1.16；排队取消和失败付费重试无自然样本时明确记未观察，不制造收费测试。
