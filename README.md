@@ -6,6 +6,12 @@ Agent plugins and MCP connection configurations for CastLoop Studio.
 
 本仓库用于维护和分发插件配置、Skills 与品牌资源。工具定义和业务执行由远程 CastLoop Studio Go MCP 服务提供；安装插件不要求下载或运行后端代码。
 
+## 更新与发版约定
+
+正式插件中依赖新版 Studio 编辑器或后端能力的说明、配置和版本号，随配套 Studio 发版一起更新。功能开发阶段先更新 SIT 插件和验收文档，正式插件保留已上线的能力说明。与 Studio 版本无关的独立修正可单独更新正式插件。SIT 插件可按测试需要随时更新。
+
+`scripts/sync-shared-plugin-files.py` 用于配套发版时将已验收的 SIT 共用内容同步到正式包；开发期间允许两者因部署进度不同而存在差异，`--check` 作为同步后的发布检查。
+
 ## 当前可用插件
 
 | 插件 | 环境 | 版本 | 能力 |

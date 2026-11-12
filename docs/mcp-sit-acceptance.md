@@ -1,5 +1,17 @@
 # CastLoop Studio SIT：Agent 自动验收任务书
 
+## 2026-11-12 独立素材保存到画布（待部署）
+
+先检查 generateMedia/readMediaTasks 实时说明是否支持自动保存画布。本节覆盖旧章节中“独立生成后另行上传到画布”的做法。沿用已授权的专用故事，每类收费任务最多一个，费用范围由用户明确授权。
+
+1. 依次生成短文本、单图、短语音、纯音乐和短视频。记录原参数、requestId、taskId。视频须等供应商完成，受理成功不算通过。
+2. 轮询 readMediaTasks 至 applied=true，记录 canvasNodeIds。生成已成功但尚未保存时继续查询；保存持续失败且 canRetryApplication=true，调用 manageGenerationTask retry_application。保留原产物，不再次生成。
+3. 打开 Studio，核对五类结果都在素材画布，文本可读、图片可见、音视频可播放。音乐返回多个不同候选时均有节点。角色图片、全局 BGM、对白视频仅在用户另有明确操作时改变。
+4. 相同参数和 requestId 再提交，复用原 taskId 和节点。完成后手动移动节点并刷新，位置保留。删除已完成素材后再次查询或重试应用，不应重新创建该素材。
+5. Caster 人工回归时用自然指令生成一张灵感图或一段短文。确认卡片提交后出现排队节点，允许移动，完成后在原节点显示结果。保存后刷新，应查询原任务并补入结果。关闭页面期间后端已开始的生成继续，回到故事后从已保存节点查询恢复。
+
+记录真实部署版本及 PASS/FAIL/NOT_VERIFIED。未实际执行故障注入、供应商超时或扣费核对的项目不能宣称通过。私有报告和产物仅保存在本地。
+
 ## 2026-11-12 两批对齐增量（待部署）
 
 配套插件 SIT 0.1.17／正式 1.0.1。先核对服务端实际出现 readImageHistory、searchTTSVoices、composeLocation/composeItem/composeWorldSetting.updates、applyStoryAsset.historyId，完整写权限共 35 个工具。缺失时记录尚未部署，不用插件版本代替服务端验证。后续历史章节用于原能力回归。
