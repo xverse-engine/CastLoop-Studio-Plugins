@@ -16,8 +16,8 @@ Agent plugins and MCP connection configurations for CastLoop Studio.
 
 | 插件 | 环境 | 版本 | 能力 |
 | --- | --- | --- | --- |
-| [CastLoop Studio](plugins/castloop-studio/README.md) | 正式环境 | 1.0.1 | 故事与资产编辑、生成、历史图片、音色查询及项目 JSON 传输；以已部署工具为准 |
-| [CastLoop Studio SIT](plugins/castloop-studio-sit/README.md) | 测试环境 | 0.1.17 | 同步精确资产文字、历史图片采用及音色查询指引；以实时 schema 和部署回执为准 |
+| [CastLoop Studio](plugins/castloop-studio/README.md) | 正式环境 | 1.0.2 | 同步 Studio 3.34.0 独立生成结果入画布与补存指引；以已部署工具为准 |
+| [CastLoop Studio SIT](plugins/castloop-studio-sit/README.md) | 测试环境 | 0.1.18 | 同步独立生成结果入画布与补存指引；以实时 schema 和部署回执为准 |
 
 正式作品选择 **CastLoop Studio**；测试作品选择 **CastLoop Studio SIT**。两者连接不同环境，需要对应环境的账号和作品权限。
 

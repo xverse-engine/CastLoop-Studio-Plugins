@@ -1,5 +1,7 @@
 # CastLoop Studio SIT：Agent 自动验收任务书
 
+2026-11-12 插件正式 1.0.2／SIT 0.1.18 同步 Studio 3.34.0 画布应用指引。独立任务仅在实时 readMediaTasks 返回 canRetryApplication=true 时调用 retry_application，补存后核对 applied=true 和 canvasNodeIds；验收报告分别记录目标服务部署版本、生成完成和画布保存结果。以下历史部署标记仍需在所测环境逐项核实。
+
 ## 2026-11-12 独立素材保存到画布（待部署）
 
 先检查 generateMedia/readMediaTasks 实时说明是否支持自动保存画布。本节覆盖旧章节中“独立生成后另行上传到画布”的做法。沿用已授权的专用故事，每类收费任务最多一个，费用范围由用户明确授权。
