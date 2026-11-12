@@ -2,6 +2,8 @@
 
 Agent plugins and MCP connection configurations for CastLoop Studio.
 
+首批客户端范围为 Codex、ChatGPT、Claude 和 Claude Code。各端安装、授权方式与验收状态见[客户端连接指南](docs/agent-clients.md)。现有 Git 市场提供 Codex 插件，其他客户端按指南配置同一远程 MCP 服务。
+
 本仓库用于维护和分发插件配置、Skills 与品牌资源。工具定义和业务执行由远程 CastLoop Studio Go MCP 服务提供；安装插件不要求下载或运行后端代码。
 
 ## 当前可用插件
