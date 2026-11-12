@@ -8,8 +8,8 @@ Agent plugins and MCP connection configurations for CastLoop Studio.
 
 | 插件 | 环境 | 版本 | 能力 |
 | --- | --- | --- | --- |
-| [CastLoop Studio](plugins/castloop-studio/README.md) | 正式环境 | 1.0.0 | 故事创作、角色和资产编辑、生成服务、任务管理与项目 JSON 导入导出 |
-| [CastLoop Studio SIT](plugins/castloop-studio-sit/README.md) | 测试环境 | 0.1.16 | 导入完整性、缺图选择、重复请求保护及独立任务管理；配套后端 3.31.0-preview.5，以实时 schema 和部署回执为准 |
+| [CastLoop Studio](plugins/castloop-studio/README.md) | 正式环境 | 1.0.1 | 故事与资产编辑、生成、历史图片、音色查询及项目 JSON 传输；以已部署工具为准 |
+| [CastLoop Studio SIT](plugins/castloop-studio-sit/README.md) | 测试环境 | 0.1.17 | 同步精确资产文字、历史图片采用及音色查询指引；以实时 schema 和部署回执为准 |
 
 正式作品选择 **CastLoop Studio**；测试作品选择 **CastLoop Studio SIT**。两者连接不同环境，需要对应环境的账号和作品权限。
 
@@ -29,6 +29,8 @@ Agent plugins and MCP connection configurations for CastLoop Studio.
 若曾添加后端仓库或本地目录作为同名市场来源，应通过客户端管理入口移除旧市场来源后再添加本仓库，避免同名市场冲突。无需手工修改个人 TOML 或插件缓存。
 
 ## Agent 自动验收
+
+正式版可先执行 [PRD 核心冒烟测试](docs/mcp-prd-smoke-test.md)：使用新建测试故事检查连接、读写、剧情编辑、复制、JSON 往返及可选的少量付费生成；内含可直接交给 Agent 的提示词。
 
 安装并授权后，可将 [SIT MCP 验收任务书](docs/mcp-sit-acceptance.md) 交给 Agent，指定专用测试故事执行。文档包含逐项调用、读回断言、可选收费测试、清理限制与报告模板；不要求手动逐条发测试指令。默认跳过付费生成，Studio 画面与跨账号权限仍单独验收。
 

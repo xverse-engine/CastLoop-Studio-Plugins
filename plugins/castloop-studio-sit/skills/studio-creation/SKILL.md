@@ -9,6 +9,8 @@ Use the connected CastLoop Studio SIT MCP tools. This plugin operates on the tes
 
 ## Project JSON import/export (only when exposed)
 
+Story titles support at most 200 Unicode characters on the updated server. On invalid_title, report characters/maxCharacters and ask for a shorter title. A database/schema failure requires a server fix before retrying the import. Keep uploadId and requestId for the same operation.
+
 Use exportStory for saved portable JSON. It returns downloadUrl (one hour), expiresAt, filename and bytes. Download directly to a user-selected file without printing or loading the document into model context. It contains media references, not packaged bytes. Browser changes must be saved first; no ZIP or published build.
 
 For import, get ONLY the byte size of the user-selected JSON file. Call prepareStoryImport(bytes). Use a local HTTP client to PUT the exact file to uploadUrl with ALL returned headers, including Content-Length and private ACL. For example curl.exe --fail --silent --show-error --request PUT --upload-file <path> with the returned headers. Do not print/read the JSON into context or base64-encode it. After successful HTTP upload call importStory(uploadId, name?). Clients without local upload capability must report that limitation and use Studio, not pretend to upload.
@@ -128,9 +130,17 @@ This tool modifies the outline, not graph nodes or published content. Require th
 
 ## Asset and world composition (when exposed)
 
-Use composeLocation/composeItem/composeWorldSetting only when exposed and requested. Read current sections first for existing targets, use stable IDs, and follow the live schema for new versus existing and modify versus rewrite. These tools compose asset/world text, not images. Generation may incur charges; require a saved receipt and read back the requested changes. Do not infer that character completion enables story graph writes, project creation/copying, or generation task management.
+Use composeLocation/composeItem/composeWorldSetting when exposed and requested. Read current sections first for existing targets and use stable IDs. When updates is exposed, supply exact final values there for a model-free edit. Supply fields only for generation instructions. These forms are mutually exclusive. Empty updates explicitly clear requested fields except name. Exact new assets require a nonblank name. World updates use mode=modify; rewrite remains model generation. Require a saved receipt and independently read back the changes, including explicit clears and preserved image references. Exact patches support only the declared fields.
+
+## Existing image history and voice selection (only when exposed)
+
+Use readImageHistory with the resolved storyId and optional entityType/entityId/imageType, then paginate nextOffset as needed. Present matching historical images before adopting one unless the user already identified the result. Use applyStoryAsset with historyId and explicit target, omitting assetId. Keep the stable requestId on retries. Character images require current phase/state names and imageType from the live schema. Read the character first because historical indices may refer to older variants. Historical dialogueFrame adoption requires complete original slicing metadata; report incomplete history instead of generating or guessing slices. Adopting a history image also records it on the canvas. Verify the selected field and canvas through reads and Studio when available. History is scoped to the authenticated user's records in the editable story.
+
+Use searchTTSVoices before selecting an unknown voice ID. It reads the server catalog without model charges or a storyId. Filter by language, gender, age, useCase or query; page with offset/limit. Supply one actual returned ID to composeCharacter exact voice selection or generateMedia speech. Search and selection are separate actions.
 
 ## Exact story node edits (when exposed)
+
+For exact node, choice and dialogue operations in composeStoryFlow, omit requestId. This field is supported only by generateSubgraphs. Exact edits are not idempotent, so read back after an uncertain write before retrying. If the server explicitly rejects requestId before saving, remove only that field and retry the rejected call. On older servers with a generic invalid_input error, read back first to confirm no changes before correcting the call.
 
 Use composeStoryFlow only for branches exposed by the live schema. The modifyNodes branch edits existing section name, description, isKeyNode, isEnding and hintBeforeChoice with exact values. Read node UIDs and current fields first; do not use display numbers. Each node appears once per call. Preserve unrequested fields and verify the saved receipt followed by readStoryNodes. isEnding only changes the legacy flag, not actual routing or explicit exits; do not use it to claim connections were removed. Never substitute patchStoryOutline or raw archive writes for missing operations.
 
@@ -162,7 +172,7 @@ Use generateMedia for standalone text, image, speech, instrumental music or text
 
 Obtain authorization for paid generation, keeping already authorized scope and budget. Supply a stable requestId per intentional generation and preserve the exact arguments for transport retries. Record taskId immediately. Repeat the same request to recover the task; changing arguments with the same ID conflicts. Failed/interrupted tasks are not automatically regenerated. Never change requestId just to work around a timeout. Idempotency is limited by task retention, not permanent.
 
-For speech, prompt is the exact text to speak, not an instruction to rewrite. Supply a known valid voiceId and language (zh-CN/en-US/ja-JP); use an existing character voice or a user-provided valid ID, never invent one. Voice search is not added by this package. For image/video only, aspectRatio is optional (default 16:9). For video only, durationSeconds is 4–10 (default 5), resolution is 720p. Music is instrumental. Other model/provider options and reference-media video are not exposed in this batch. Do not send irrelevant options.
+For speech, prompt is the exact text to speak. Supply a known valid voiceId and language (zh-CN/en-US/ja-JP); use searchTTSVoices when exposed, an existing character voice, or a user-provided valid ID. For image/video only, aspectRatio is optional (default 16:9). For video only, durationSeconds is 4–10 (default 5), resolution is 720p. Music is instrumental. Follow the live schema for supported provider options and reference media.
 
 Poll readMediaTasks with the returned taskIds, at a reasonable interval (e.g. 10–15 seconds), stopping on final success/failure. A query error is not generation failure and must not trigger new generation. Video acceptance/submission is not completion; its final status and URL come from readMediaTasks. readGenerationTasks can find recent tasks and points to this result tool. manageGenerationTask remains limited to the documented asset-image tasks, not these standalone requests.
 
