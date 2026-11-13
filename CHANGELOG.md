@@ -1,5 +1,10 @@
 # Changelog
 
+## 统一多客户端版本：正式 1.0.2／SIT 0.1.18 — 2026-11-13
+
+- Codex 与 Claude 同环境共用插件版本，Claude 不再维护独立的 0.1.x 版本序列。
+- 自动从对应环境 Codex 清单生成 Claude 版本、README 和 ZIP 文件名；保留桌面 Add plugins 安装引导与原 OAuth 配置。
+
 ## Claude 插件 0.1.1 — 2026-11-13
 
 - 补齐桌面 Code 的 + → Add plugins／Plugins → Browse plugins 安装入口，与 CLI 的 /plugin、/mcp 流程分开说明。

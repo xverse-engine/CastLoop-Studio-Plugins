@@ -29,6 +29,8 @@ class ClaudePluginsTest(unittest.TestCase):
             self.assertEqual(config, {'mcpServers': {name: {'type': 'http', 'url': expected_url}}})
             manifest = json.loads(files[prefix / '.claude-plugin/plugin.json'])
             self.assertEqual(manifest['name'], name)
+            codex = json.loads((ROOT / 'plugins' / name / '.codex-plugin/plugin.json').read_text(encoding='utf-8'))
+            self.assertEqual(manifest['version'], codex['version'])
             self.assertNotIn('mcpServers', manifest)  # Uses the default .mcp.json on every surface.
             skill = files[prefix / 'skills/studio-creation/SKILL.md'].decode()
             self.assertIn('Do not proactively list stories', skill)
@@ -38,6 +40,7 @@ class ClaudePluginsTest(unittest.TestCase):
             self.assertIn('never invent an OAuth URL', skill)
             self.assertIn('+ > Add plugins', skill)
             readme = files[prefix / 'README.md'].decode()
+            self.assertIn('**' + codex['version'] + '**', readme)
             self.assertIn('+ → Add plugins', readme)
             self.assertIn('Browse plugins', readme)
             self.assertIn('CLI', readme)
@@ -49,6 +52,8 @@ class ClaudePluginsTest(unittest.TestCase):
             output = Path(temp)
             for archive_path in self.builder.write_archives(files, output):
                 with zipfile.ZipFile(archive_path) as archive:
+                    manifest = json.loads(archive.read('.claude-plugin/plugin.json'))
+                    self.assertEqual(archive_path.name, manifest['name'] + '-claude-' + manifest['version'] + '.zip')
                     names = archive.namelist()
                     self.assertIn('.claude-plugin/plugin.json', names)
                     self.assertIn('.mcp.json', names)

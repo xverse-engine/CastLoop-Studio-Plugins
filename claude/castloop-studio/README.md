@@ -1,6 +1,6 @@
 # CastLoop Studio PRD for Claude
 
-Claude 插件版本 **0.1.1**，仅连接正式环境：`https://studio.castloop.ai/mcp`。
+插件版本 **1.0.2**，与同环境 Codex 插件共用版本号，仅连接正式环境：`https://studio.castloop.ai/mcp`。
 支持 Claude 聊天（网页、桌面和手机）、Cowork 与 Claude Code。
 
 ## 安装与连接

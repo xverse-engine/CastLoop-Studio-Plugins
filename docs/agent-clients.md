@@ -4,10 +4,10 @@
 
 ## 环境与验收状态
 
-| 环境 | MCP 地址 | 插件名 |
-| --- | --- | --- |
-| PRD（国内与海外共用） | `https://studio.castloop.ai/mcp` | `castloop-studio` |
-| SIT（测试账号） | `https://castloop-sit.xverse.cn/mcp` | `castloop-studio-sit` |
+| 环境 | MCP 地址 | 插件名 | 版本（Codex／Claude 共用） |
+| --- | --- | --- | --- |
+| PRD（国内与海外共用） | `https://studio.castloop.ai/mcp` | `castloop-studio` | 1.0.2 |
+| SIT（测试账号） | `https://castloop-sit.xverse.cn/mcp` | `castloop-studio-sit` | 0.1.18 |
 
 Codex 已按固定公开 Client ID 流程验证。ChatGPT SIT 的 DCR 登录授权与作品读取已由用户确认。Claude 插件完成源文件、ZIP 与本地清单检查；Claude 聊天、Cowork、Code 的真实 OAuth／工具读取仍需逐端验收。2026-11-13 公开 discovery 检查：SIT 已公布 `/oidc/mcp/register`，PRD 未公布 registration_endpoint，仍声明支持 CIMD。PRD 需要配套更新 Logto 自动注册配置或另行验证 CIMD／预注册路径，不能套用 SIT 结论。正式前端入口仍仅开放 Codex；SIT 按 GPT／Claude 分组提供各自两个打开按钮。
 
@@ -83,7 +83,7 @@ claude plugin validate claude/castloop-studio
 claude plugin validate .
 ```
 
-ZIP 可在 Plugins > Add > Upload plugin 上传本账号私测。源文件改变后重新生成，Claude 包单独升版；不要为了 Claude 改变现有 Codex OAuth 配置。生成脚本不会安装、登录或发布插件。
+ZIP 可在 Plugins > Add > Upload plugin 上传本账号私测。同环境的 Codex 与 Claude 插件共用版本号，以 `plugins/<插件名>/.codex-plugin/plugin.json` 为来源，更新时统一升版并重新生成 Claude 清单、README 和 ZIP 文件名。正式与 SIT 各自独立；ChatGPT 连接器没有插件包版本。不要为了统一版本改变 Codex OAuth 配置。生成脚本不会安装、登录或发布插件。
 
 每端验收：安装 → 连接器授权／Code `/mcp` → 新会话工具发现 → 读取指定测试 storyId 并核对。默认不做修改或收费生成；需要时另行明确范围，再验证写入与读回。SIT 与 PRD 分开记录，报告不包含密码、令牌或授权码。
 

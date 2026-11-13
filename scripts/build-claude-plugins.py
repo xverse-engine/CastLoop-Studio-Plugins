@@ -10,7 +10,6 @@ import zipfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = '0.1.1'
 ENVIRONMENTS = {
     'castloop-studio': ('https://studio.castloop.ai/mcp', 'PRD', '正式'),
     'castloop-studio-sit': ('https://castloop-sit.xverse.cn/mcp', 'SIT', '测试'),
@@ -62,10 +61,11 @@ def generated_files(root=ROOT):
         mcp = json.loads((source / '.mcp.json').read_text(encoding='utf-8'))
         if codex['name'] != name or mcp['mcpServers'][name]['url'] != url:
             raise ValueError('Source identity or MCP environment mismatch: ' + name)
+        version = codex['version']
         prefix = Path('claude') / name
         files[prefix / '.claude-plugin/plugin.json'] = json_bytes({
             'name': name,
-            'version': VERSION, 'description': codex['description'],
+            'version': version, 'description': codex['description'],
             'author': {'name': 'CastLoop'}, 'license': 'MIT',
             'repository': 'https://github.com/xverse-engine/CastLoop-Studio-Plugins',
         })
@@ -81,7 +81,7 @@ def generated_files(root=ROOT):
         files[prefix / 'LICENSE'] = (root / 'LICENSE').read_bytes()
         files[prefix / 'README.md'] = f'''# CastLoop Studio {'SIT' if environment == 'SIT' else 'PRD'} for Claude
 
-Claude 插件版本 **{VERSION}**，仅连接{chinese_environment}环境：`{url}`。
+插件版本 **{version}**，与同环境 Codex 插件共用版本号，仅连接{chinese_environment}环境：`{url}`。
 支持 Claude 聊天（网页、桌面和手机）、Cowork 与 Claude Code。
 
 ## 安装与连接
@@ -133,7 +133,10 @@ Package validation does not verify OAuth login or a successful story read.
 
 
 def write_archives(files, output):
-    targets = [output / f'{name}-claude-{VERSION}.zip' for name in ENVIRONMENTS]
+    targets = []
+    for name in ENVIRONMENTS:
+        manifest = json.loads(files[Path('claude') / name / '.claude-plugin/plugin.json'])
+        targets.append(output / f"{name}-claude-{manifest['version']}.zip")
     for target in targets:
         if target.exists():
             raise FileExistsError('Archive already exists: ' + str(target))

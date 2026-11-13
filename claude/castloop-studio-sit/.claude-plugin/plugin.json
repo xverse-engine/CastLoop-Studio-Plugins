@@ -1,6 +1,6 @@
 {
   "name": "castloop-studio-sit",
-  "version": "0.1.1",
+  "version": "0.1.18",
   "description": "Connect to CastLoop Studio SIT to find stories, read saved content and use supported character, asset, world and outline editing tools.",
   "author": {
     "name": "CastLoop"

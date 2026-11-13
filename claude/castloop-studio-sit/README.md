@@ -1,6 +1,6 @@
 # CastLoop Studio SIT for Claude
 
-Claude 插件版本 **0.1.1**，仅连接测试环境：`https://castloop-sit.xverse.cn/mcp`。
+插件版本 **0.1.18**，与同环境 Codex 插件共用版本号，仅连接测试环境：`https://castloop-sit.xverse.cn/mcp`。
 支持 Claude 聊天（网页、桌面和手机）、Cowork 与 Claude Code。
 
 ## 安装与连接
