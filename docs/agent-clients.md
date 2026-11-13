@@ -19,13 +19,15 @@ Codex 已按固定公开 Client ID 流程验证。ChatGPT SIT 的 DCR 登录授�
 
 在设置的连接器／插件中添加自定义 MCP，填写对应环境 MCP 地址，选择 OAuth。SIT 客户端注册使用动态客户端注册（DCR），登录自己的 Studio 账号并授权，再在对话中启用。无需填写 Client ID、Secret 或端口。此流程不要求安装 Git 插件。
 
+编辑器的 ChatGPT／Claude 聊天按钮保留带提示词的 HTTPS 网页链接（可右键复制）；普通左键先尝试桌面应用，未观察到页面失焦／隐藏时提示「未能打开…，自动使用网页版」，再新开网页。浏览器不提供可靠安装检测，协议确认框和弹窗策略可能影响自动回退；按钮下同时提供直接使用网页版的链接。Ctrl／Cmd／Shift／Alt 点击保留浏览器原行为，Codex／Claude Code 仍直接打开相应桌面模式。打开和预填不会自动发送提示词或提交任务。
+
 ## Claude 聊天与 Cowork：优先安装插件
 
 1. 在网页或桌面的 Plugins（旧界面 Customize > Plugins）选择 Add > Add marketplace。
 2. 填写 `xverse-engine/CastLoop-Studio-Plugins`，安装表中对应环境插件。仓库功能分支未合入默认分支前，先使用本地构建的 ZIP 验收，不能假定默认分支已有新文件。
 3. 打开插件的 **Connectors** 页签，添加／连接内置 Studio 连接器。优先 Register automatically，登录对应环境 Studio 账号授权。插件提供地址，无需自行填 Client ID 或 Secret。Team／Enterprise 可能需要 Owner 先添加或允许连接器。
 4. 开启会话并使用插件 Skill。账号插件也可用于手机聊天，安装管理可先在网页／桌面完成。Cowork 新建任务后加载插件。
-5. 从编辑器点击「在 Claude 中打开」，链接 `https://claude.ai/new?q=...` 预填交接提示词；没有预填时粘贴。检查当前会话实际工具，再说明需求或读取明确 storyId。
+5. 从编辑器点击「在 Claude 中继续」，先尝试桌面聊天，必要时回退到 `https://claude.ai/new?q=...`；没有预填时粘贴。检查当前会话实际工具，再说明需求或读取明确 storyId。
 
 安装不会替用户授权。连接器显示 Connected、会话发现工具、成功读取目标作品是三项独立检查。
 
