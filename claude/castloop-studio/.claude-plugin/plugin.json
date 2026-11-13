@@ -1,0 +1,10 @@
+{
+  "name": "castloop-studio",
+  "version": "0.1.0",
+  "description": "Create with CastLoop Studio: find stories, edit scripts and assets, generate media and save results to your projects.",
+  "author": {
+    "name": "CastLoop"
+  },
+  "license": "MIT",
+  "repository": "https://github.com/xverse-engine/CastLoop-Studio-Plugins"
+}

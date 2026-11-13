@@ -1,0 +1,21 @@
+{
+  "name": "castloop-studio-development",
+  "owner": {
+    "name": "CastLoop"
+  },
+  "metadata": {
+    "description": "CastLoop Studio plugins for Claude chat, Cowork and Claude Code"
+  },
+  "plugins": [
+    {
+      "name": "castloop-studio",
+      "source": "./claude/castloop-studio",
+      "description": "Create with CastLoop Studio: find stories, edit scripts and assets, generate media and save results to your projects."
+    },
+    {
+      "name": "castloop-studio-sit",
+      "source": "./claude/castloop-studio-sit",
+      "description": "Connect to CastLoop Studio SIT to find stories, read saved content and use supported character, asset, world and outline editing tools."
+    }
+  ]
+}

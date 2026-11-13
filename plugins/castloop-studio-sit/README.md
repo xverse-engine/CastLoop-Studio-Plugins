@@ -1,5 +1,7 @@
 # CastLoop Studio SIT
 
+本目录提供 Codex 插件。Claude 聊天、Cowork 与 Claude Code 使用独立的 [Claude SIT 包](../../claude/castloop-studio-sit/README.md)；ChatGPT 通过连接器接入。安装与授权见[客户端指南](../../docs/agent-clients.md)。现有 Codex Client ID 不用于 Claude 插件自动注册。
+
 Codex 插件版本 **0.1.18**，连接测试环境。同步独立生成结果自动保存到故事画布和成功产物补存指引，支持精确地点／道具／世界观文字、历史图片采用、音色查询及项目 JSON 传输。先确认配套后端已部署，再按实时 schema 调用。
 
 ## 能力

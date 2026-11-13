@@ -2,7 +2,7 @@
 
 Agent plugins and MCP connection configurations for CastLoop Studio.
 
-首批客户端范围为 Codex、ChatGPT、Claude 和 Claude Code。各端安装、授权方式与验收状态见[客户端连接指南](docs/agent-clients.md)。现有 Git 市场提供 Codex 插件，其他客户端按指南配置同一远程 MCP 服务。
+Codex 使用现有插件；ChatGPT 使用远程 MCP 连接器；Claude 聊天、Cowork 和 Claude Code 共用本仓库的 Claude 插件市场。正式与 SIT 分成独立插件，地址由插件提供。Claude 插件已完成本地打包与清单校验，真实客户端 OAuth／工具读取需分别验收，安装成功不代表已连接。详见[客户端连接指南](docs/agent-clients.md)。
 
 本仓库用于维护和分发插件配置、Skills 与品牌资源。工具定义和业务执行由远程 CastLoop Studio Go MCP 服务提供；安装插件不要求下载或运行后端代码。
 
@@ -36,6 +36,37 @@ Agent plugins and MCP connection configurations for CastLoop Studio.
 
 若曾添加后端仓库或本地目录作为同名市场来源，应通过客户端管理入口移除旧市场来源后再添加本仓库，避免同名市场冲突。无需手工修改个人 TOML 或插件缓存。
 
+## 在 Claude 中安装
+
+1. 在 Claude 网页或桌面的 Plugins（旧界面为 Customize > Plugins）选择 Add > Add marketplace。
+2. 填写 `xverse-engine/CastLoop-Studio-Plugins`，正式环境安装 `castloop-studio`，SIT 安装 `castloop-studio-sit`。
+3. 打开插件的 Connectors 页签，添加／连接内置连接器，登录对应环境 Studio 账号授权；优先 OAuth 自动注册，无需手填 MCP 地址或 Client ID。组织管理员可能需要先添加或允许连接器。
+4. 回到会话说明需求。插件 Skill 可用于网页、桌面与手机聊天、Cowork 和 Claude Code，各端加载其支持的组件。
+
+Claude Code 可以独立安装：
+
+```text
+/plugin marketplace add xverse-engine/CastLoop-Studio-Plugins
+/plugin install castloop-studio-sit@castloop-studio-development
+```
+
+正式环境将安装命令中的插件名换为 `castloop-studio`。在 `/mcp` 登录 Studio 授权。
+账号安装可同步到支持该功能的 Claude Code 版本；API key／Gateway 登录不保证支持账号同步。CLI 安装不反向同步到账号。
+
+Claude 插件位于 `claude/`，采用固定环境 URL 和 OAuth 自动注册，与 Codex 固定公开 Client ID／回调配置隔离。各环境从自己的现有创作 Skill 派生，不同步尚未正式部署的 SIT 能力。
+
+```text
+python scripts/build-claude-plugins.py
+python scripts/build-claude-plugins.py --check
+python -m unittest discover -s scripts/tests -p test_claude_plugins.py -v
+```
+
+测试 ZIP：追加 `--archive-dir <仓库外输出目录>`，每包只包含 Claude 清单、MCP、Skill、README 和 LICENSE。源文件生成、清单验证、OAuth 登录、实际故事读取分别验收。
+
+## ChatGPT
+
+继续按[连接指南](docs/agent-clients.md)添加远程 MCP 连接器，SIT 使用已验证的 DCR 流程。无需安装本仓库的 Claude 插件。
+
 ## Agent 自动验收
 
 正式版可先执行 [PRD 核心冒烟测试](docs/mcp-prd-smoke-test.md)：使用新建测试故事检查连接、读写、剧情编辑、复制、JSON 往返及可选的少量付费生成；内含可直接交给 Agent 的提示词。
@@ -53,6 +84,9 @@ Agent plugins and MCP connection configurations for CastLoop Studio.
 ## 仓库内容
 
 - `.agents/plugins/marketplace.json`：正式／测试插件市场清单，路径相对于仓库根目录。
+- `.claude-plugin/marketplace.json`：Claude 聊天、Cowork、Claude Code 共用市场清单。
+- `claude/castloop-studio/`、`claude/castloop-studio-sit/`：独立 Claude 包，每包包含 `.claude-plugin/plugin.json`、固定 URL 的 `.mcp.json` 和创作 Skill。
+- 现有 Codex `.codex-plugin/` / `.mcp.json` 配置保持原状。
 - `plugins/castloop-studio/`：正式环境插件配置、创作 Skill 和图标。
 - `plugins/castloop-studio-sit/`：已验收的 Codex 插件配置、角色操作 Skill 和图标。
 - `CHANGELOG.md`：发布与迁移记录。
