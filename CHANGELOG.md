@@ -1,5 +1,10 @@
 # Changelog
 
+## Claude 插件 0.1.1 — 2026-11-13
+
+- 补齐桌面 Code 的 + → Add plugins／Plugins → Browse plugins 安装入口，与 CLI 的 /plugin、/mcp 流程分开说明。
+- 同步两环境的 Skill、README 和连接指南，连接器保留为插件不可用时的备用方式。
+
 ## Claude 插件 0.1.0（待客户端验收）— 2026-11-13
 
 - 同仓库增加 Claude 市场，正式／SIT 各一包，覆盖 Claude 聊天、Cowork 和 Claude Code。

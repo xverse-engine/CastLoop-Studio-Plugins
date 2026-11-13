@@ -10,7 +10,7 @@ import zipfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = '0.1.0'
+VERSION = '0.1.1'
 ENVIRONMENTS = {
     'castloop-studio': ('https://studio.castloop.ai/mcp', 'PRD', '正式'),
     'castloop-studio-sit': ('https://castloop-sit.xverse.cn/mcp', 'SIT', '测试'),
@@ -26,8 +26,11 @@ If tools are unavailable, stop. In Claude chat or Cowork, open this plugin's
 Connectors tab, add/connect its bundled connector, then sign in to Studio and
 authorize it. Prefer automatic OAuth registration; do not ask users to enter a
 Client ID, secret, callback port, password or token. An organization Owner may
-need to add/allow the connector first. In Claude Code, use /mcp to authenticate
-the plugin's server. Never invent an OAuth URL. Follow the connection guide in
+need to add/allow the connector first. For Desktop Code installation, direct
+users to + > Add plugins beside the prompt box (or Plugins > Browse plugins).
+Use + > Connectors to connect and authorize Studio. Give /plugin installation
+commands and /mcp authorization instructions to CLI users, not as the only
+desktop workflow. Never invent an OAuth URL. Follow the connection guide in
 the README for fallback custom connectors or CLI instructions.
 
 If the user replies "Connected", check available tools again. If still absent,
@@ -89,14 +92,19 @@ Add > Add marketplace，填写 `xverse-engine/CastLoop-Studio-Plugins`，安装 
 优先自动注册 OAuth，无需手填 MCP 地址、Client ID 或回调端口。
 Team／Enterprise 可能需要管理员先添加或允许连接器。
 
-Claude Code 也可独立安装：
+Claude 桌面 Code：点输入框左侧 **+ → Add plugins** 安装；若显示 Plugins，选
+Browse plugins。添加上述仓库市场并安装 **{name}**，再通过 Connectors 登录
+Studio 授权。插件不可用时才用 **+ → Connectors** 添加当前环境 MCP 地址。
+桌面本地／SSH 会话支持插件浏览器，云端／WSL 会话的限制以客户端为准。
+
+Claude Code CLI 也可独立安装：
 
 ```text
 /plugin marketplace add xverse-engine/CastLoop-Studio-Plugins
 /plugin install {name}@castloop-studio-development
 ```
 
-使用 `/mcp` 完成登录授权。账号插件同步需要支持该功能的 Claude Code
+CLI 使用 `/mcp` 完成登录授权。账号插件同步需要支持该功能的 Claude Code
 版本和 Claude 账号登录；API key／Gateway 登录不保证支持账号同步。
 CLI 安装不反向同步到 Claude 账号。安装后开启新会话或按客户端支持使用 `/reload-plugins`。
 

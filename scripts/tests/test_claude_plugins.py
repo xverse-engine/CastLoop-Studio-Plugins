@@ -36,6 +36,11 @@ class ClaudePluginsTest(unittest.TestCase):
             self.assertIn('readStorySections', skill)
             self.assertIn('Connectors', skill)
             self.assertIn('never invent an OAuth URL', skill)
+            self.assertIn('+ > Add plugins', skill)
+            readme = files[prefix / 'README.md'].decode()
+            self.assertIn('+ → Add plugins', readme)
+            self.assertIn('Browse plugins', readme)
+            self.assertIn('CLI', readme)
         self.assertTrue(all(path.parts[0] in {'claude', '.claude-plugin'} for path in files))
 
     def test_archives_are_self_contained_and_exclude_private_and_other_host_files(self):

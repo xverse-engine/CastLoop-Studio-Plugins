@@ -15,8 +15,11 @@ If tools are unavailable, stop. In Claude chat or Cowork, open this plugin's
 Connectors tab, add/connect its bundled connector, then sign in to Studio and
 authorize it. Prefer automatic OAuth registration; do not ask users to enter a
 Client ID, secret, callback port, password or token. An organization Owner may
-need to add/allow the connector first. In Claude Code, use /mcp to authenticate
-the plugin's server. Never invent an OAuth URL. Follow the connection guide in
+need to add/allow the connector first. For Desktop Code installation, direct
+users to + > Add plugins beside the prompt box (or Plugins > Browse plugins).
+Use + > Connectors to connect and authorize Studio. Give /plugin installation
+commands and /mcp authorization instructions to CLI users, not as the only
+desktop workflow. Never invent an OAuth URL. Follow the connection guide in
 the README for fallback custom connectors or CLI instructions.
 
 If the user replies "Connected", check available tools again. If still absent,

@@ -43,7 +43,9 @@ Codex 使用现有插件；ChatGPT 使用远程 MCP 连接器；Claude 聊天、
 3. 打开插件的 Connectors 页签，添加／连接内置连接器，登录对应环境 Studio 账号授权；优先 OAuth 自动注册，无需手填 MCP 地址或 Client ID。组织管理员可能需要先添加或允许连接器。
 4. 回到会话说明需求。插件 Skill 可用于网页、桌面与手机聊天、Cowork 和 Claude Code，各端加载其支持的组件。
 
-Claude Code 可以独立安装：
+Claude 桌面 Code 可点输入框左侧 **+ → Add plugins** 安装；若显示 Plugins，选 Browse plugins。安装后通过 Connectors 登录 Studio 授权，插件入口不可用时才用 + → Connectors 手动配置。
+
+Claude Code CLI 可以独立安装：
 
 ```text
 /plugin marketplace add xverse-engine/CastLoop-Studio-Plugins

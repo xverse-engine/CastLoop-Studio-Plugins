@@ -31,6 +31,18 @@ Codex 已按固定公开 Client ID 流程验证。ChatGPT SIT 的 DCR 登录授�
 
 ## Claude Code：同一插件，独立安装也可
 
+### 桌面应用 Code 页签
+
+1. 在本地或 SSH Code 会话的输入框左侧点击 **+ → Add plugins**。
+2. 若菜单显示 Plugins，则选 **Plugins → Browse plugins**；Manage plugins 用于启停或卸载。
+3. 在插件浏览器添加 `xverse-engine/CastLoop-Studio-Plugins` 市场，安装当前环境的 `castloop-studio-sit` 或 `castloop-studio`。
+4. 通过 **Connectors** 完成 Studio 登录授权；OAuth 优先自动注册。插件入口不可用时，才用 **+ → Connectors** 手动添加当前环境地址。
+5. 安装或授权后新建会话，再检查实际工具；必要时回编辑器重新点击对应入口。
+
+这是桌面安装流程，无需先使用终端 `/plugin` 命令。插件浏览器不适用于云端会话，WSL 会话限制以官方说明和实际客户端为准。
+
+### CLI 与账号同步
+
 账号安装的插件可单向同步到同账号登录的 Claude Code，官方要求 v2.1.273 或以上；旧版本请先更新。API key／Gateway／云提供商登录不保证支持账号同步。若需要独立本机安装：
 
 ```text
@@ -75,4 +87,4 @@ ZIP 可在 Plugins > Add > Upload plugin 上传本账号私测。源文件改变
 
 每端验收：安装 → 连接器授权／Code `/mcp` → 新会话工具发现 → 读取指定测试 storyId 并核对。默认不做修改或收费生成；需要时另行明确范围，再验证写入与读回。SIT 与 PRD 分开记录，报告不包含密码、令牌或授权码。
 
-官方参考：[插件平台支持](https://claude.com/docs/plugins/platform-support) · [插件安装与连接器](https://claude.com/docs/plugins/overview) · [插件结构和逐端测试](https://claude.com/docs/plugins/build) · [账号插件同步](https://support.claude.com/en/articles/13837440-use-plugins-in-claude) · [桌面深链](https://support.claude.com/en/articles/14729294-open-claude-desktop-with-a-link)
+官方参考：[桌面 Code 安装插件](https://code.claude.com/docs/en/desktop#install-plugins) · [插件平台支持](https://claude.com/docs/plugins/platform-support) · [插件安装与连接器](https://claude.com/docs/plugins/overview) · [插件结构和逐端测试](https://claude.com/docs/plugins/build) · [账号插件同步](https://support.claude.com/en/articles/13837440-use-plugins-in-claude) · [桌面深链](https://support.claude.com/en/articles/14729294-open-claude-desktop-with-a-link)
