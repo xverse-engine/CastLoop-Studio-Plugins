@@ -7,13 +7,13 @@
 | 环境 | MCP 地址 | 插件名 | 版本（Codex／Claude 共用） |
 | --- | --- | --- | --- |
 | PRD（国内与海外共用） | `https://studio.castloop.ai/mcp` | `castloop-studio` | 1.0.2 |
-| SIT（测试账号） | `https://castloop-sit.xverse.cn/mcp` | `castloop-studio-sit` | 0.1.18 |
+| SIT（测试账号） | `https://castloop-sit.xverse.cn/mcp` | `castloop-studio-sit` | 0.1.19 |
 
-Codex 已按固定公开 Client ID 流程验证。ChatGPT SIT 的 DCR 登录授权与作品读取已由用户确认。Claude 插件完成源文件、ZIP 与本地清单检查；Claude 聊天、Cowork、Code 的真实 OAuth／工具读取仍需逐端验收。2026-11-13 公开 discovery 检查：SIT 已公布 `/oidc/mcp/register`，PRD 未公布 registration_endpoint，仍声明支持 CIMD。PRD 需要配套更新 Logto 自动注册配置或另行验证 CIMD／预注册路径，不能套用 SIT 结论。正式前端入口仍仅开放 Codex；SIT 按 GPT／Claude 分组提供各自两个打开按钮。
+Codex 正式版保留已验证的固定公开 Client ID 流程；SIT 0.1.19 改为 discovery 驱动的 DCR，真实 Codex 重新授权与读取验收单独记录。ChatGPT SIT 的 DCR 登录授权与作品读取已由用户确认。Claude 插件完成源文件、ZIP 与本地清单检查；Claude 聊天、Cowork、Code 的真实 OAuth／工具读取仍需逐端验收。2026-11-13 公开 discovery 检查：SIT 已公布 `/oidc/mcp/register`，PRD 未公布 registration_endpoint，仍声明支持 CIMD。PRD 需要配套更新 Logto 自动注册配置或另行验证 CIMD／预注册路径，不能套用 SIT 结论。正式前端入口仍仅开放 Codex；SIT 按 GPT／Claude 分组提供各自两个打开按钮。
 
 ## Codex
 
-按[现有安装说明](../README.md#在-codex-中安装)安装对应环境插件并登录 Studio。既有 Client ID 与本地回调配置保持原状。
+按[现有安装说明](../README.md#在-codex-中安装)安装对应环境插件并登录 Studio。SIT 0.1.19 移除固定 Client ID 与本地回调，由 Codex 自动注册 OAuth 客户端；用户不需要填写 ID、Secret 或端口。正式版暂时保留既有配置。更新后已有授权可能沿用旧客户端，需要通过客户端提供的重新认证入口验证新流程，详见 [Codex DCR 迁移说明](codex-dcr.md)。
 
 ## ChatGPT
 

@@ -8,11 +8,7 @@
         "studio:read",
         "studio:write",
         "offline_access"
-      ],
-      "oauth": {
-        "clientId": "y30cn0zl9be20aeog6kh6",
-        "callbackUrl": "http://127.0.0.1/callback"
-      }
+      ]
     }
   }
 }

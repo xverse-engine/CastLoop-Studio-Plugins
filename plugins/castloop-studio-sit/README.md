@@ -1,8 +1,8 @@
 # CastLoop Studio SIT
 
-本目录提供 Codex 插件。Claude 聊天、Cowork 与 Claude Code 使用独立的 [Claude SIT 包](../../claude/castloop-studio-sit/README.md)；ChatGPT 通过连接器接入。安装与授权见[客户端指南](../../docs/agent-clients.md)。现有 Codex Client ID 不用于 Claude 插件自动注册。
+本目录提供 Codex 插件。Claude 聊天、Cowork 与 Claude Code 使用独立的 [Claude SIT 包](../../claude/castloop-studio-sit/README.md)；ChatGPT 通过连接器接入。安装与授权见[客户端指南](../../docs/agent-clients.md)。Codex 与 Claude 使用各自客户端的 OAuth 自动注册，不共享固定 Client ID。
 
-Codex 插件版本 **0.1.18**，连接测试环境。同步独立生成结果自动保存到故事画布和成功产物补存指引，支持精确地点／道具／世界观文字、历史图片采用、音色查询及项目 JSON 传输。先确认配套后端已部署，再按实时 schema 调用。
+Codex 插件版本 **0.1.19**，连接测试环境。OAuth 改为 DCR 自动注册，保留现有创作能力与权限范围。同步独立生成结果自动保存到故事画布和成功产物补存指引，支持精确地点／道具／世界观文字、历史图片采用、音色查询及项目 JSON 传输。先确认配套后端已部署，再按实时 schema 调用。
 
 ## 能力
 
@@ -34,10 +34,10 @@ Codex 插件版本 **0.1.18**，连接测试环境。同步独立生成结果自
 ## 连接配置
 
 - MCP：`https://castloop-sit.xverse.cn/mcp`
-- 公开 OAuth Client ID：`y30cn0zl9be20aeog6kh6`
-- 本地回调：`http://127.0.0.1/callback`
+- OAuth：由客户端通过授权服务器 discovery 中的注册端点执行 DCR。
+- Client ID 与本地回调由客户端管理，插件不固定 ID、回调地址或端口。
 - 申请权限：`openid`、`studio:read`、`studio:write`、`offline_access`
-- 采用预注册公共客户端的授权码与 PKCE 流程，不携带 Client Secret 或用户凭据。
+- 采用公共客户端的授权码与 PKCE 流程，不携带 Client Secret 或用户凭据。
 
 本插件使用 `.codex-plugin/plugin.json` 引用 `.mcp.json` 和 Skills。工具列表来自远程 MCP 服务，不在插件内复制。不要将插件包地址作为 MCP 服务地址。
 
@@ -45,9 +45,11 @@ Codex 插件版本 **0.1.18**，连接测试环境。同步独立生成结果自
 
 按[仓库安装说明](../../README.md)添加 Git 市场并安装。在客户端的 MCP 管理入口完成登录授权；已有手动配置的同环境连接可由用户禁用，避免重复。
 
-当前包没有托管 App 绑定，不保证出现 Figma 式「已连接账号」区域。插件安装成功不代表 OAuth 成功；新会话应发现实际可调用的 `readStoryCharacters`、`composeCharacter`。若授权 URL 的 client_id 仍是 chatgpt.com 身份文件 URL，说明预注册配置未生效，应停止该次授权并检查加载配置。
+当前包没有托管 App 绑定，不保证出现 Figma 式「已连接账号」区域。插件安装成功不代表 OAuth 成功；新会话应发现实际可调用的 `readStoryCharacters`、`composeCharacter`。新登录应使用注册端点返回的 Client ID，而不是旧固定 ID 或 chatgpt.com 元数据 URL；出现后者时检查是否仍加载旧配置及当前环境 discovery。
 
-本地回调只用于当前已验收的 Codex 本地连接。后续若接官方目录或托管连接，须另行核对 OAuth 应用与准确回调，不自动套用本地回调。
+已有授权可能继续使用旧客户端；更新插件不保证立即重新注册。需要验收 DCR 时，用客户端提供的断开／重新认证操作再登录，随后开启新会话读取明确指定的测试故事。不要手改用户凭据或插件缓存。旧预注册应用仍作为服务端 DCR 权限模板使用，不能删除。
+
+配置回归、注册检查与真实客户端登录分开记录，见 [Codex DCR 迁移说明](../../docs/codex-dcr.md)。
 
 ## 验收记录
 

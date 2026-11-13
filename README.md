@@ -17,11 +17,11 @@ Codex 使用现有插件；ChatGPT 使用远程 MCP 连接器；Claude 聊天、
 | 插件 | 环境 | 版本 | 能力 |
 | --- | --- | --- | --- |
 | [CastLoop Studio](plugins/castloop-studio/README.md) | 正式环境 | 1.0.2 | 同步 Studio 3.34.0 独立生成结果入画布与补存指引；以已部署工具为准 |
-| [CastLoop Studio SIT](plugins/castloop-studio-sit/README.md) | 测试环境 | 0.1.18 | 同步独立生成结果入画布与补存指引；以实时 schema 和部署回执为准 |
+| [CastLoop Studio SIT](plugins/castloop-studio-sit/README.md) | 测试环境 | 0.1.19 | Codex OAuth 改为 DCR；创作能力保持现状，以实时 schema 为准 |
 
 正式作品选择 **CastLoop Studio**；测试作品选择 **CastLoop Studio SIT**。两者连接不同环境，需要对应环境的账号和作品权限。
 
-同一环境的 Codex 与 Claude 插件共用版本号：正式 **1.0.2**，SIT **0.1.18**。版本以 `plugins/<插件名>/.codex-plugin/plugin.json` 为来源，Claude 生成脚本自动同步清单、README 与 ZIP 文件名。以后同环境插件改动统一升版并重新生成，正式与 SIT 仍独立发版。ChatGPT 走连接器，无独立插件包版本。
+同一环境的 Codex 与 Claude 插件共用版本号：正式 **1.0.2**，SIT **0.1.19**。版本以 `plugins/<插件名>/.codex-plugin/plugin.json` 为来源，Claude 生成脚本自动同步清单、README 与 ZIP 文件名。以后同环境插件改动统一升版并重新生成，正式与 SIT 仍独立发版。ChatGPT 走连接器，无独立插件包版本。
 
 ## 在 Codex 中安装
 
@@ -57,7 +57,7 @@ Claude Code CLI 可以独立安装：
 正式环境将安装命令中的插件名换为 `castloop-studio`。在 `/mcp` 登录 Studio 授权。
 账号安装可同步到支持该功能的 Claude Code 版本；API key／Gateway 登录不保证支持账号同步。CLI 安装不反向同步到账号。
 
-Claude 插件位于 `claude/`，采用固定环境 URL 和 OAuth 自动注册，与 Codex 固定公开 Client ID／回调配置隔离。各环境从自己的现有创作 Skill 派生，不同步尚未正式部署的 SIT 能力。
+Claude 插件位于 `claude/`，采用固定环境 URL 和 OAuth 自动注册，与 Codex 包分目录维护。Codex SIT 也使用 DCR，正式 Codex 保留固定公开 Client ID／回调配置。各环境从自己的现有创作 Skill 派生，不同步尚未正式部署的 SIT 能力。
 
 ```text
 python scripts/build-claude-plugins.py
@@ -90,7 +90,7 @@ python -m unittest discover -s scripts/tests -p test_claude_plugins.py -v
 - `.agents/plugins/marketplace.json`：正式／测试插件市场清单，路径相对于仓库根目录。
 - `.claude-plugin/marketplace.json`：Claude 聊天、Cowork、Claude Code 共用市场清单。
 - `claude/castloop-studio/`、`claude/castloop-studio-sit/`：独立 Claude 包，每包包含 `.claude-plugin/plugin.json`、固定 URL 的 `.mcp.json` 和创作 Skill。
-- 现有 Codex `.codex-plugin/` / `.mcp.json` 配置保持原状。
+- Codex `.codex-plugin/` / `.mcp.json`：SIT 使用自动注册，正式保留预注册配置。
 - `plugins/castloop-studio/`：正式环境插件配置、创作 Skill 和图标。
 - `plugins/castloop-studio-sit/`：已验收的 Codex 插件配置、角色操作 Skill 和图标。
 - `CHANGELOG.md`：发布与迁移记录。
