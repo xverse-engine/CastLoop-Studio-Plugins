@@ -16,12 +16,12 @@ Codex 使用现有插件；ChatGPT 使用远程 MCP 连接器；Claude 聊天、
 
 | 插件 | 环境 | 版本 | 能力 |
 | --- | --- | --- | --- |
-| [CastLoop Studio](plugins/castloop-studio/README.md) | 正式环境 | 1.0.2 | 同步 Studio 3.34.0 独立生成结果入画布与补存指引；以已部署工具为准 |
+| [CastLoop Studio](plugins/castloop-studio/README.md) | 正式环境 | 1.0.3 | 配套 Studio 3.35.0 多客户端接入指引；以已部署工具为准 |
 | [CastLoop Studio SIT](plugins/castloop-studio-sit/README.md) | 测试环境 | 0.1.19 | Codex OAuth 改为 DCR；创作能力保持现状，以实时 schema 为准 |
 
 正式作品选择 **CastLoop Studio**；测试作品选择 **CastLoop Studio SIT**。两者连接不同环境，需要对应环境的账号和作品权限。
 
-同一环境的 Codex 与 Claude 插件共用版本号：正式 **1.0.2**，SIT **0.1.19**。版本以 `plugins/<插件名>/.codex-plugin/plugin.json` 为来源，Claude 生成脚本自动同步清单、README 与 ZIP 文件名。以后同环境插件改动统一升版并重新生成，正式与 SIT 仍独立发版。ChatGPT 走连接器，无独立插件包版本。
+同一环境的 Codex 与 Claude 插件共用版本号：正式 **1.0.3**，SIT **0.1.19**。版本以 `plugins/<插件名>/.codex-plugin/plugin.json` 为来源，Claude 生成脚本自动同步清单、README 与 ZIP 文件名。以后同环境插件改动统一升版并重新生成，正式与 SIT 仍独立发版。ChatGPT 走连接器，无独立插件包版本。
 
 ## 在 Codex 中安装
 

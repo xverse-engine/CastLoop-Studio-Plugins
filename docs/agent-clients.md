@@ -6,18 +6,18 @@
 
 | 环境 | MCP 地址 | 插件名 | 版本（Codex／Claude 共用） |
 | --- | --- | --- | --- |
-| PRD（国内与海外共用） | `https://studio.castloop.ai/mcp` | `castloop-studio` | 1.0.2 |
+| PRD（国内与海外共用） | `https://studio.castloop.ai/mcp` | `castloop-studio` | 1.0.3 |
 | SIT（测试账号） | `https://castloop-sit.xverse.cn/mcp` | `castloop-studio-sit` | 0.1.19 |
 
-Codex 正式版保留已验证的固定公开 Client ID 流程；SIT 0.1.19 改为 discovery 驱动的 DCR，真实 Codex 重新授权与读取验收单独记录。ChatGPT SIT 的 DCR 登录授权与作品读取已由用户确认。Claude 插件完成源文件、ZIP 与本地清单检查；Claude 聊天、Cowork、Code 的真实 OAuth／工具读取仍需逐端验收。2026-11-13 公开 discovery 检查：SIT 已公布 `/oidc/mcp/register`，PRD 未公布 registration_endpoint，仍声明支持 CIMD。PRD 需要配套更新 Logto 自动注册配置或另行验证 CIMD／预注册路径，不能套用 SIT 结论。正式前端入口仍仅开放 Codex；SIT 按 GPT／Claude 分组提供各自两个打开按钮。
+Codex 正式版保留已验证的固定公开 Client ID 流程；SIT 0.1.19 改为 discovery 驱动的 DCR，真实 Codex 重新授权与读取验收单独记录。ChatGPT SIT 的 DCR 登录授权与作品读取已由用户确认。Claude 插件完成源文件、ZIP 与本地清单检查；Claude 聊天、Cowork、Code 的真实 OAuth／工具读写仍需逐端验收。2026-11-13 公网核验：SIT 和 PRD 均已公布 `/oidc/mcp/register` 并关闭 CIMD 优先选择，PRD 桌面、ChatGPT、Claude 三类回调的注册和 PKCE 登录页跳转通过。Studio 3.35.0 正式前端与 SIT 一样按 GPT／Claude 分组提供四个入口，两地正式环境共用海外 MCP。注册成功不等于用户登录或工具读写完成。
 
 ## Codex
 
-按[现有安装说明](../README.md#在-codex-中安装)安装对应环境插件并登录 Studio。SIT 0.1.19 移除固定 Client ID 与本地回调，由 Codex 自动注册 OAuth 客户端；用户不需要填写 ID、Secret 或端口。正式版暂时保留既有配置。更新后已有授权可能沿用旧客户端，需要通过客户端提供的重新认证入口验证新流程，详见 [Codex DCR 迁移说明](codex-dcr.md)。
+按[现有安装说明](../README.md#在-codex-中安装)安装对应环境插件并登录 Studio。SIT 0.1.19 移除固定 Client ID 与本地回调，由 Codex 自动注册 OAuth 客户端；用户不需要填写 ID、Secret 或端口。正式 1.0.3 保留既有配置，不强制迁移已有授权。更新后已有授权可能沿用旧客户端，需要通过客户端提供的重新认证入口验证新流程，详见 [Codex DCR 迁移说明](codex-dcr.md)。
 
 ## ChatGPT
 
-在设置的连接器／插件中添加自定义 MCP，填写对应环境 MCP 地址，选择 OAuth。SIT 客户端注册使用动态客户端注册（DCR），登录自己的 Studio 账号并授权，再在对话中启用。无需填写 Client ID、Secret 或端口。此流程不要求安装 Git 插件。
+在设置的连接器／插件中添加自定义 MCP，填写对应环境 MCP 地址，选择 OAuth。SIT 与 PRD 均选择动态客户端注册（DCR），登录自己的 Studio 账号并授权，再在对话中启用。无需填写 Client ID、Secret 或端口。此流程不要求安装 Git 插件。
 
 编辑器的 ChatGPT／Claude 聊天按钮保留带提示词的 HTTPS 网页链接（可右键复制）；普通左键先尝试桌面应用，未观察到页面失焦／隐藏时提示「未能打开…，自动使用网页版」，再新开网页。浏览器不提供可靠安装检测，协议确认框和弹窗策略可能影响自动回退；按钮下同时提供直接使用网页版的链接。Ctrl／Cmd／Shift／Alt 点击保留浏览器原行为，Codex／Claude Code 仍直接打开相应桌面模式。打开和预填不会自动发送提示词或提交任务。
 

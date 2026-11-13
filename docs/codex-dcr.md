@@ -1,5 +1,7 @@
 # Codex SIT DCR 迁移（2026-11-13）
 
+后续状态：配套 Studio 3.35.0，PRD Logto 也已公布注册端点，三类回调注册及登录跳转检查通过。正式 Codex 插件仍保留预注册配置，不强制迁移已有连接；下文「正式尚无注册端点」记录的是 SIT 迁移时的状态。真实 Codex DCR 用户登录与工具读写仍单独验收。
+
 ## 范围
 
 SIT 插件 0.1.19 删除 `.mcp.json` 中固定的 `oauth.clientId` 与 `callbackUrl`，保留 MCP 地址、HTTP 传输、四项 scope、插件名与市场来源。当前兼容清单使用 Codex 的自动客户端注册，不添加该格式未定义的 DCR 开关。Codex 优先使用显式配置的 Client ID；无固定 ID 时按 discovery 选择 CIMD 或 DCR。
