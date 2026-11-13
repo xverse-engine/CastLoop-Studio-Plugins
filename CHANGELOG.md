@@ -1,5 +1,12 @@
 # Changelog
 
+## Claude 插件 0.1.0（待客户端验收）— 2026-11-13
+
+- 同仓库增加 Claude 市场，正式／SIT 各一包，覆盖 Claude 聊天、Cowork 和 Claude Code。
+- Claude 使用独立目录、固定环境 MCP URL 与 OAuth 自动注册，不继承 Codex 的 Client ID 或本地回调；Codex 已发布配置保持原状，ChatGPT 继续走连接器。
+- 从对应环境创作 Skill 派生规则，补齐首次连接检查、不主动选故事、首次只读与收费任务约束。
+- 提供可复现 ZIP 导出、生成内容校验与环境隔离测试；清单校验通过不代表 OAuth 登录、账号同步或实际工具调用已通过。
+
 ## 正式 1.0.2 / SIT 0.1.18 — 2026-11-12
 
 - 配套 Studio 3.34.0，在国内 PRD Pod 更新并通过运行验证后发布插件指引。

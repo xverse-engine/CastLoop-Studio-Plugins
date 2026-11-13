@@ -1,73 +1,78 @@
 # 在外部 Agent 中继续创作
 
-首批接入范围为 GPT 系列的 Codex、ChatGPT，以及 Claude 系列的 Claude、Claude Code。Studio 的「连接外部 Agent」和故事内「在 Agent 中继续」使用同一个交接弹窗。
+编辑器按客户端提供独立的打开按钮和提示词。故事内先保存修改；交接携带 storyId，连接成功后先读取并核对目标。打开链接、安装插件和看到 Skill 不代表工具已连接。
 
-Codex 与 Claude Code 的打开链接预填提示词，查看后手动发送。ChatGPT 与 Claude 的打开按钮将对应提示词复制到剪贴板，然后打开网页，在输入框粘贴并发送。也可以使用「复制提示词」。浏览器未能打开应用时，在已安装的客户端中粘贴即可。Claude Code 的链接需要本机已安装并注册 `claude-cli://` 协议处理器。
+## 环境与验收状态
 
-故事内的提示词携带明确的 storyId，首次只读取并核对作品。先保存 Studio 中的修改，外部编辑结束后重新打开故事核对结果。故事外进入对话后可稍后指定作品。
-
-## 环境和授权
-
-| 环境 | MCP 地址 | OAuth issuer |
+| 环境 | MCP 地址 | 插件名 |
 | --- | --- | --- |
-| 正式 | `https://studio.castloop.ai/mcp` | `https://auth.castloop.ai/oidc` |
-| SIT | `https://castloop-sit.xverse.cn/mcp` | `https://sit-xnarrator-game-auth.xverse.cn/oidc` |
+| PRD（国内与海外共用） | `https://studio.castloop.ai/mcp` | `castloop-studio` |
+| SIT（测试账号） | `https://castloop-sit.xverse.cn/mcp` | `castloop-studio-sit` |
 
-国内与海外正式 Studio 共用上表正式 MCP。SIT 使用测试账号和测试作品。本地、自定义后端使用交接提示词中的实际地址，云端客户端还需能访问该服务。
-
-登录现有 Studio 账号，读取申请 `studio:read`，编辑同时申请 `studio:write`。需要长期连接时申请 `offline_access` 并验证刷新令牌。OAuth 请求的 `resource` 应为对应环境完整 MCP 地址。
-
-截至 2026-11-12，正式环境公开发现声明支持 CIMD、PKCE S256 和公共客户端 token endpoint 的 `none` 认证方式，未公布 DCR 注册端点。Codex 继续使用已有预注册应用。其他客户端先按其支持的身份发现方式连接，若失败，由管理员为该客户端配置预注册应用，再按客户端实际回调及 token endpoint 认证方式完成授权。
+Codex 已按固定公开 Client ID 流程验证。ChatGPT SIT 的 DCR 登录授权与作品读取已由用户确认。Claude 插件完成源文件、ZIP 与本地清单检查；Claude 聊天、Cowork、Code 的真实 OAuth／工具读取仍需逐端验收。2026-11-13 公开 discovery 检查：SIT 已公布 `/oidc/mcp/register`，PRD 未公布 registration_endpoint，仍声明支持 CIMD。PRD 需要配套更新 Logto 自动注册配置或另行验证 CIMD／预注册路径，不能套用 SIT 结论。正式前端入口仍仅开放 Codex；SIT 按 GPT／Claude 分组提供各自两个打开按钮。
 
 ## Codex
 
-按[现有安装说明](../README.md)添加插件市场，安装 CastLoop Studio，登录授权。SIT 选择 CastLoop Studio SIT。Studio 的 Codex 按钮继续携带当前环境的插件 mention。
-
-现有 `.mcp.json` 中的 OAuth 应用和本地回调属于这条接入路径，其他客户端应配置自己的实际注册信息。
+按[现有安装说明](../README.md#在-codex-中安装)安装对应环境插件并登录 Studio。既有 Client ID 与本地回调配置保持原状。
 
 ## ChatGPT
 
-1. 打开 ChatGPT 的插件管理，选择添加自定义 MCP 服务。账号或工作区需要提供相应自定义接入权限。
-2. 填写当前环境 MCP 地址，选择 OAuth。根据管理员提供的配置选择 CIMD，或填写预注册应用信息。
-3. 登录 Studio 并授予所需读写权限，安装并在会话中启用该插件。
-4. 粘贴 Studio 复制的提示词，发送后先确认实际工具与目标故事。
+在设置的连接器／插件中添加自定义 MCP，填写对应环境 MCP 地址，选择 OAuth。SIT 客户端注册使用动态客户端注册（DCR），登录自己的 Studio 账号并授权，再在对话中启用。无需填写 Client ID、Secret 或端口。此流程不要求安装 Git 插件。
 
-预注册应用的回调 URL、应用类型及 token endpoint 认证方式以 ChatGPT 管理页面显示的信息为准。[ChatGPT 接入文档](https://developers.openai.com/api/docs/guides/custom-mcp-server)、[OAuth 文档](https://developers.openai.com/plugins/build/auth)
+## Claude 聊天与 Cowork：优先安装插件
 
-## Claude
+1. 在网页或桌面的 Plugins（旧界面 Customize > Plugins）选择 Add > Add marketplace。
+2. 填写 `xverse-engine/CastLoop-Studio-Plugins`，安装表中对应环境插件。仓库功能分支未合入默认分支前，先使用本地构建的 ZIP 验收，不能假定默认分支已有新文件。
+3. 打开插件的 **Connectors** 页签，添加／连接内置 Studio 连接器。优先 Register automatically，登录对应环境 Studio 账号授权。插件提供地址，无需自行填 Client ID 或 Secret。Team／Enterprise 可能需要 Owner 先添加或允许连接器。
+4. 开启会话并使用插件 Skill。账号插件也可用于手机聊天，安装管理可先在网页／桌面完成。Cowork 新建任务后加载插件。
+5. 从编辑器点击「在 Claude 中打开」，链接 `https://claude.ai/new?q=...` 预填交接提示词；没有预填时粘贴。检查当前会话实际工具，再说明需求或读取明确 storyId。
 
-1. 在 Claude 的 Connectors 中添加自定义远程连接器。
-2. 填写当前环境 MCP 地址，根据服务器发现和管理员配置选择 Claude 身份或预注册 OAuth 应用。
-3. 登录 Studio 并完成授权，在会话中启用连接器。
-4. 粘贴 Studio 复制的提示词，发送后先读取目标作品。
+安装不会替用户授权。连接器显示 Connected、会话发现工具、成功读取目标作品是三项独立检查。
 
-网页和桌面的远程连接器通过 Anthropic 云端访问 MCP，需要服务及授权端点可从其网络访问。[Claude 连接器文档](https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp)
+## Claude Code：同一插件，独立安装也可
 
-## Claude Code
+账号安装的插件可单向同步到同账号登录的 Claude Code，官方要求 v2.1.273 或以上；旧版本请先更新。API key／Gateway／云提供商登录不保证支持账号同步。若需要独立本机安装：
 
-在自己的终端添加正式 MCP 服务。SIT 应同时替换名称与地址。
-
-```sh
-claude mcp add --scope user --transport http castloop-studio https://studio.castloop.ai/mcp
+```text
+/plugin marketplace add xverse-engine/CastLoop-Studio-Plugins
+/plugin install castloop-studio-sit@castloop-studio-development
 ```
 
-在 Claude Code 中运行 `/mcp`，选择该服务并按提示登录 Studio。此配置会保存到自己的用户级 MCP 设置。若身份文件获取或自动注册失败，由管理员提供独立预注册应用的公开 Client ID 与已登记回调端口，使用以下模板配置。
+正式环境换为 `castloop-studio@castloop-studio-development`。安装后在 `/mcp` 找到插件提供的 Studio 服务并完成登录授权。开启新会话，或在支持的版本中用 `/reload-plugins` 重新加载。CLI 安装不会反向同步到 Claude 账号。
 
-```sh
-claude mcp add --scope user --transport http --client-id YOUR_CLIENT_ID --callback-port YOUR_REGISTERED_PORT castloop-studio https://studio.castloop.ai/mcp
+编辑器「在 Claude Code 中打开」通过 `claude://code/new?q=...` 进入桌面 Code 页签并预填提示词，需要桌面应用和本地 Code 会话。若应用未打开，手动进入 Code 页签并粘贴提示词。手机／网页聊天使用 Claude 聊天入口。
+
+首次交接仅读取线上保存内容，不主动列作品、选择最近故事、修改故事或提交收费任务。后续明确要求修改／生成后按 Skill、实际工具和账号权限执行。
+
+## 无法安装或连接时
+
+- **插件入口不可用**：按客户端支持添加自定义连接器。桌面输入框内左侧 `+` → Connectors / Add connectors；也可在 Plugins／旧版 Customize 中管理连接器。填入表中当前环境 MCP URL，选择 OAuth 自动注册并登录 Studio。
+- **Code CLI 备用**：运行下面命令后，在 `/mcp` 完成授权。SIT 示例：
+
+  ```text
+  claude mcp add --transport http --scope user castloop-studio-sit https://castloop-sit.xverse.cn/mcp
+  ```
+
+  同一客户端优先只保留一种 Studio 安装方式，避免插件和手动配置出现两份同环境工具。
+- **自动注册失败**：由管理员检查该环境的 OAuth discovery、注册端点和允许的回调。客户端支持时可由管理员提供为该 Claude 客户端预注册的公开 Client ID；不能直接照搬 Codex 回调，也不应让普通用户创建应用。不要把 Secret、密码或 Token 发到对话中。
+- **回复“已连接”后仍无工具**：重新检查实际工具，启动新会话／重载插件；也可回编辑器重新点击对应 Claude／Claude Code 入口。不要仅凭旧会话无工具就认定登录失败，不编造授权 URL。
+- **账号或组织限制**：由 Owner 检查插件、连接器与来源权限。Gateway 登录环境以实际支持为准，不承诺账号插件同步。
+
+## 维护与测试
+
+Claude 源包位于 `claude/`，与 Codex 配置隔离。正式与 SIT 各自从对应环境 Skill 派生，保留已部署能力边界。
+
+```text
+python scripts/build-claude-plugins.py
+python scripts/build-claude-plugins.py --check
+python scripts/build-claude-plugins.py --check --archive-dir <仓库外输出目录>
+claude plugin validate claude/castloop-studio-sit
+claude plugin validate claude/castloop-studio
+claude plugin validate .
 ```
 
-`YOUR_CLIENT_ID` 和 `YOUR_REGISTERED_PORT` 需要替换成管理员实际配置的值。公共 PKCE 客户端使用公开 Client ID。实际回调 URL 的主机、端口与路径须与 Logto 注册值一致，不同 Claude Code 版本的 localhost / 127.0.0.1 行为需要核对。
+ZIP 可在 Plugins > Add > Upload plugin 上传本账号私测。源文件改变后重新生成，Claude 包单独升版；不要为了 Claude 改变现有 Codex OAuth 配置。生成脚本不会安装、登录或发布插件。
 
-连接后使用 Studio 的「在 Claude Code 中打开」，或在 Claude Code 输入框粘贴交接提示词。`claude-cli://open?q=` 只预填内容，用户按 Enter 后发送。[Claude Code MCP 文档](https://code.claude.com/docs/en/mcp)、[打开链接文档](https://code.claude.com/docs/en/deep-links)
+每端验收：安装 → 连接器授权／Code `/mcp` → 新会话工具发现 → 读取指定测试 storyId 并核对。默认不做修改或收费生成；需要时另行明确范围，再验证写入与读回。SIT 与 PRD 分开记录，报告不包含密码、令牌或授权码。
 
-## 验收状态
-
-| 客户端 | 已有证据 | 待完成 |
-| --- | --- | --- |
-| Codex | 既有安装、授权及读改保存验收，四入口改造有前端回归 | 新版入口发布后复验 |
-| ChatGPT | 交接入口与对应提示词、本地测试 | 真实注册、登录、读改保存、刷新及撤销 |
-| Claude | 交接入口与对应提示词、本地测试 | 真实注册、登录、读改保存、刷新及撤销 |
-| Claude Code | 官方链接和配置方式、本机 2.1.109 CLI 参数核对、本地测试 | 本机唤起、实际回调、登录、读改保存、刷新及撤销 |
-
-每端使用专用测试作品，依次验证工具发现、读取、明确修改一个字段、读回和 Studio 显示，再验证只读令牌、无权作品、过期刷新与撤销。生成任务验证应保留 taskId / requestId，并分别检查接受、生成与保存状态。需要付费生成的验收应事先明确范围。只记录必要状态与错误码，报告中不包含访问令牌、刷新令牌或授权码。
+官方参考：[插件平台支持](https://claude.com/docs/plugins/platform-support) · [插件安装与连接器](https://claude.com/docs/plugins/overview) · [插件结构和逐端测试](https://claude.com/docs/plugins/build) · [账号插件同步](https://support.claude.com/en/articles/13837440-use-plugins-in-claude) · [桌面深链](https://support.claude.com/en/articles/14729294-open-claude-desktop-with-a-link)
