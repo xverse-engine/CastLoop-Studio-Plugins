@@ -1,0 +1,14 @@
+{
+  "gameId": "story-password-lock",
+  "gameVersion": "1.0.0",
+  "protocolVersion": "1.1",
+  "status": "not_verified",
+  "targets": ["web", "ios", "android"],
+  "checks": [
+    { "name": "host-roundtrip", "status": "not_verified" },
+    { "name": "lifecycle", "status": "not_verified" },
+    { "name": "result", "status": "not_verified" },
+    { "name": "save", "status": "not_verified" },
+    { "name": "unlock", "status": "not_verified" }
+  ]
+}

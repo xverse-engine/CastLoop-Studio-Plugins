@@ -1,0 +1,28 @@
+{
+  "type": "mini_game",
+  "gameId": "blood-moon-belladonna-merge2",
+  "gameVersion": "1.0.0",
+  "protocolVersion": "1.1",
+  "miniGameData": {
+    "schemaVersion": 1,
+    "mode": "story_single_level",
+    "levelId": 3
+  },
+  "benefitPolicy": {
+    "defaults": {
+      "diamondCost": 10,
+      "freeUses": 1,
+      "membership": true,
+      "rewardedAd": true
+    },
+    "benefits": {
+      "retry": {
+        "freeUses": 0,
+        "diamondCost": 15
+      },
+      "skip": {
+        "rewardedAd": false
+      }
+    }
+  }
+}

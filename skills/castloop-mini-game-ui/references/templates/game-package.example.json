@@ -1,0 +1,52 @@
+{
+  "specVersion": "1.2.0",
+  "protocolVersion": "1.1",
+  "gameId": "story-password-lock",
+  "gameVersion": "1.0.0",
+  "entry": "index.html",
+  "runtime": {
+    "mode": "integration",
+    "hostAdapter": "platform"
+  },
+  "hostBridge": "host/platform-host.mjs",
+  "capabilities": [
+    "save",
+    "unlock",
+    "result",
+    "exit"
+  ],
+  "saveSchemaVersion": 1,
+  "resultCodes": [
+    "success",
+    "failure"
+  ],
+  "commerce": {
+    "authority": "platform",
+    "offers": [
+      {
+        "offerId": "hint-01",
+        "grantKey": "hint-01",
+        "kind": "unlock",
+        "scope": "interaction",
+        "methods": [
+          "diamonds",
+          "membership",
+          "rewarded_ad"
+        ]
+      }
+    ]
+  },
+  "runtimeFiles": [
+    "index.html",
+    "app.mjs",
+    "host/platform-host.mjs",
+    "assets/scene.webp",
+    "assets/items/key.webp"
+  ],
+  "defaultBenefitPolicy": {
+    "diamondCost": 10,
+    "freeUses": 1,
+    "membership": true,
+    "rewardedAd": true
+  }
+}
