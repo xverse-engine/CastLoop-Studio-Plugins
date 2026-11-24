@@ -79,6 +79,7 @@ export async function auditRuntime(directory) {
   requireCondition(new Set(config.runtimeFiles.map(f => f.toLowerCase())).size === config.runtimeFiles.length,'Case-colliding runtime files');
   requireCondition(config.runtimeFiles.includes(config.entry) && /\.html$/.test(config.entry), 'entry HTML must be declared');
   requireCondition(config.runtimeFiles.includes(config.hostBridge) && /\.(m?js)$/.test(config.hostBridge), 'hostBridge JS must be declared');
+  requireCondition(config.runtimeFiles.includes('cover.webp'), 'Missing cover.webp in runtimeFiles');
   const files = new Map([['game-package.json',manifestBytes]]);
   for (const name of config.runtimeFiles) {
     requireCondition(!['game-package.json','generation-manifest.json'].includes(name.toLowerCase()),'Reserved generated filename: '+name);

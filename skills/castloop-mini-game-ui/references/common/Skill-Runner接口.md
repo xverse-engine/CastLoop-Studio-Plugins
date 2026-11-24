@@ -109,12 +109,12 @@ Skill 标识、版本、协议、图片格式、parameterMode、previewOnly 由 
     "previewUrl":"https://games.example/stories/42/mini-games/custom-puzzle-unique-id/1.0.0/index.html",
     "miniGameData":{"levelId":2},
     "editorSchema":{"version":1,"fields":[{"path":["levelId"],"label":"关卡","type":"select","options":[{"label":"第一关","value":1},{"label":"第二关","value":2}]}]},
-    "files":[{"path":"index.html","bytes":1024,"sha256":"<64 lowercase hex characters>"},{"path":"images/stage.webp","bytes":2048,"sha256":"<64 lowercase hex characters>"}]
+    "files":[{"path":"index.html","bytes":1024,"sha256":"<64 lowercase hex characters>"},{"path":"cover.webp","bytes":2048,"sha256":"<64 lowercase hex characters>"}]
   }
 }
 ```
 
-每个游戏独立目录，与 storyId/gameId/gameVersion 一致；每次生成用新 ID 或新版本，不能覆盖旧包。清单必须包含 index.html；无重复/越界路径；≤256 个文件、总计≤20 MiB。图片仅 WebP；其他可用 HTML、JS/MJS、CSS、JSON、WOFF/WOFF2/TTF、MP3/OGG/WAV、MP4、TXT。
+每个游戏独立目录，与 storyId/gameId/gameVersion 一致；每次生成用新 ID 或新版本，不能覆盖旧包。清单必须包含 index.html 和素材库卡片封面 cover.webp；无重复/越界路径；≤256 个文件、总计≤20 MiB。图片仅 WebP；其他可用 HTML、JS/MJS、CSS、JSON、WOFF/WOFF2/TTF、MP3/OGG/WAV、MP4、TXT。
 
 新生成结果必须提供非空 displayName 和 editorSchema（version=1、fields 数组最多 32 项；确实无需参数时 fields=[]）。字段声明 path（1–8 段对象键）、label、type，可选 description、min/max、maxLength、options。type 仅 string/number/integer/boolean/select；下拉选项为 `{label,value}`，value 仅字符串或有限数字。每条路径必须已存在于 miniGameData，默认值符合类型、上下限和枚举；禁止原型键、重复路径、代码、动态组件或 HTML 表单。重要参数由 Skill 声明，隐藏数据原样保留，编辑器不推测游戏内部结构。历史已保存但缺少 schema 的素材只提供默认参数预览，不提供 JSON 输入框。
 

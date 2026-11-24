@@ -37,6 +37,7 @@
     ]
   },
   "runtimeFiles": [
+    "cover.webp",
     "index.html",
     "app.mjs",
     "host/platform-host.mjs",

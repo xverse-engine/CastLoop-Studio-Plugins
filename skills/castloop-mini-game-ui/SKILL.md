@@ -7,6 +7,8 @@ description: 为不懂代码的创作者根据自然语言与故事输入生成�
 
 ## 任务路由与正式接入边界
 
+每个新生成的可试玩小游戏都要制作一张素材库卡片封面。用该游戏的实际画面截图或与玩法匹配的主题图，主体居中以适应卡片裁切，导出为静态 WebP（最多 16,777,216 像素）。将 `cover.webp` 放在版本包根目录，与 `index.html` 同级，并列入 `game-package.json` 的 `runtimeFiles`。组包后核对生成清单含封面的大小和 SHA-256；项目库和个人库复用同一张封面。
+
 - 自然语言创作／对话修改：先读 [自然语言创作](references/common/自然语言创作.md)。作者不必自备技术稿，Agent 负责形成玩法草稿。
 - 创作端生成任务／可复用小游戏资产：读 [创作端生成与资产复用](references/common/创作端生成与资产复用.md)。同时交付 H5、完整 `miniGameData`、`displayName` 和 `editorSchema`；开发部署读 [Skill Runner 接口](references/common/Skill-Runner接口.md)。创作者不用写 JSON，生成成功后由平台加入项目素材库，其他节点可选择并单独调整关键参数。
 - 玩法、视觉生成：沿用下文流程与 [全局 UI](references/common/全局UI.md)、[素材](references/common/素材与九宫格.md)。本 Skill 不是任意玩法零代码解释器，选定玩法仍需独立引擎与视图。

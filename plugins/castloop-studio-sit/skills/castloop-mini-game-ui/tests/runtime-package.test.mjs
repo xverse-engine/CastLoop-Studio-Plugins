@@ -17,7 +17,8 @@ async function fixture(fn) {
       entry: 'index.html', runtime: { mode: 'production', hostAdapter: 'platform' }, hostBridge: 'host.mjs',
       capabilities: ['save', 'unlock', 'result', 'exit'], saveSchemaVersion: 1, resultCodes: ['success', 'failure'],
       commerce: { authority: 'platform', offers: [{ offerId: 'hint-01', grantKey: 'hint-01', kind: 'unlock', scope: 'run', methods: ['diamonds', 'membership', 'rewarded_ad'] }] },
-      runtimeFiles: ['index.html', 'host.mjs', 'release.json'], releaseEvidence: 'release.json' };
+      runtimeFiles: ['cover.webp', 'index.html', 'host.mjs', 'release.json'], releaseEvidence: 'release.json' };
+    await writeFile(path.join(src, 'cover.webp'), webp);
     await writeFile(path.join(src, 'index.html'), '<script type="module" src="host.mjs"></script>');
     await writeFile(path.join(src, 'host.mjs'), 'export const protocolVersion = "1.1";');
     await writeFile(path.join(src, 'release.json'), JSON.stringify({ gameId: 'test-game', gameVersion: '1.0.0', protocolVersion: '1.1', status: 'passed', targets: ['web'], checks: ['host-roundtrip','lifecycle','result','save','unlock'].map(name=>({name,status:'passed'})) }));
@@ -35,7 +36,7 @@ test('copies only declared runtime files and hashes the exact output reproducibl
   const first = await assembleRuntime(src, path.join(root, 'one'));
   const second = await assembleRuntime(src, path.join(root, 'two'));
   assert.equal(first.bundleHash, second.bundleHash);
-  assert.deepEqual((await readdir(gameDirectory(path.join(root, 'one')))).sort(), ['game-package.json','generation-manifest.json','host.mjs','index.html','release.json']);
+  assert.deepEqual((await readdir(gameDirectory(path.join(root, 'one')))).sort(), ['cover.webp','game-package.json','generation-manifest.json','host.mjs','index.html','release.json']);
   assert.equal(first.files['host.mjs'].sha256.length, 64);
   assert.equal(JSON.parse(await readFile(path.join(gameDirectory(path.join(root,'one')),'game-package.json'),'utf8')).gameId, 'test-game');
   await writeFile(path.join(src,'host.mjs'),'export const changed = true;');
@@ -50,13 +51,13 @@ test('rejects production mock adapters and mock code markers', () => fixture(asy
 }));
 test('preview permits explicit mock and remains labelled preview', () => fixture(async ({src,config,save}) => {
   config.runtime = { mode: 'preview', hostAdapter: 'mock' }; delete config.releaseEvidence;
-  config.runtimeFiles = ['index.html','host.mjs']; await save();
+  config.runtimeFiles = ['cover.webp','index.html','host.mjs']; await save();
   assert.equal((await auditRuntime(src)).config.runtime.mode,'preview');
 }));
 test('1.2 interaction integration package is auditable but is never production certification', () => fixture(async ({src,config,save}) => {
   config.specVersion='1.2.0';config.runtime={mode:'integration',hostAdapter:'platform'};
   config.commerce.offers[0].scope='interaction';delete config.releaseEvidence;
-  config.runtimeFiles=['index.html','host.mjs'];await save();
+  config.runtimeFiles=['cover.webp','index.html','host.mjs'];await save();
   assert.equal((await auditRuntime(src)).config.runtime.mode,'integration');
   config.commerce.offers[0].scope='run';await save();await assert.rejects(auditRuntime(src),/scope/);
   config.commerce.offers[0].scope='interaction';config.runtime.mode='production';await save();await assert.rejects(auditRuntime(src),/evidence/);
@@ -136,4 +137,9 @@ test('keeps games and versions independent inside the same story assets director
   assert.deepEqual((await readdir(path.join(assets,'mini-games','another-game'))).sort(),['1.0.0','1.0.1']);
   assert.equal(JSON.parse(await readFile(path.join(gameDirectory(assets),'game-package.json'),'utf8')).gameId,'test-game');
   assert.deepEqual(await readFile(path.join(assets,'story-cover.webp')),webp);
+}));
+
+test('requires a declared library cover', () => fixture(async ({config,save,src}) => {
+  config.runtimeFiles = config.runtimeFiles.filter(name => name !== 'cover.webp'); await save();
+  await assert.rejects(auditRuntime(src), /cover.webp/);
 }));
