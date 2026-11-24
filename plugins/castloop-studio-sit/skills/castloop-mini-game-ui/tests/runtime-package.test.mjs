@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { mkdtemp, writeFile, readFile, mkdir, rm, readdir, symlink } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
-import { auditRuntime } from '../scripts/audit-runtime.mjs';
+import { validateRuntime } from '../scripts/validate-runtime.mjs';
 import { assembleRuntime } from '../scripts/assemble-runtime.mjs';
 
 const webp = Buffer.from('UklGRiIAAABXRUJQVlA4IBYAAAAwAQCdASoBAAEADsD+JaQAA3AAAAAA', 'base64');
@@ -44,49 +44,49 @@ test('copies only declared runtime files and hashes the exact output reproducibl
   assert.notEqual(changed.bundleHash, first.bundleHash);
 }));
 test('rejects production mock adapters and mock code markers', () => fixture(async ({src,config,save}) => {
-  config.runtime.hostAdapter = 'mock'; await save(); await assert.rejects(auditRuntime(src), /production.*platform/);
+  config.runtime.hostAdapter = 'mock'; await save(); await assert.rejects(validateRuntime(src), /production.*platform/);
   config.runtime.hostAdapter = 'platform'; await save();
   await writeFile(path.join(src,'host.mjs'),'const MOCK_CONFIG = {};');
-  await assert.rejects(auditRuntime(src), /Mock/);
+  await assert.rejects(validateRuntime(src), /Mock/);
 }));
 test('preview permits explicit mock and remains labelled preview', () => fixture(async ({src,config,save}) => {
   config.runtime = { mode: 'preview', hostAdapter: 'mock' }; delete config.releaseEvidence;
   config.runtimeFiles = ['cover.webp','index.html','host.mjs']; await save();
-  assert.equal((await auditRuntime(src)).config.runtime.mode,'preview');
+  assert.equal((await validateRuntime(src)).config.runtime.mode,'preview');
 }));
 test('1.2 interaction integration package is auditable but is never production certification', () => fixture(async ({src,config,save}) => {
   config.specVersion='1.2.0';config.runtime={mode:'integration',hostAdapter:'platform'};
   config.commerce.offers[0].scope='interaction';delete config.releaseEvidence;
   config.runtimeFiles=['cover.webp','index.html','host.mjs'];await save();
-  assert.equal((await auditRuntime(src)).config.runtime.mode,'integration');
-  config.commerce.offers[0].scope='run';await save();await assert.rejects(auditRuntime(src),/scope/);
-  config.commerce.offers[0].scope='interaction';config.runtime.mode='production';await save();await assert.rejects(auditRuntime(src),/evidence/);
+  assert.equal((await validateRuntime(src)).config.runtime.mode,'integration');
+  config.commerce.offers[0].scope='run';await save();await assert.rejects(validateRuntime(src),/scope/);
+  config.commerce.offers[0].scope='interaction';config.runtime.mode='production';await save();await assert.rejects(validateRuntime(src),/evidence/);
 }));
 test('requires server-owned commerce, unique offers and an unlock capability', () => fixture(async ({src,config,save}) => {
-  config.commerce.authority='client'; await save(); await assert.rejects(auditRuntime(src), /authority/);
-  config.commerce.authority='platform'; config.commerce.offers.push({...config.commerce.offers[0]}); await save(); await assert.rejects(auditRuntime(src), /offerId/);
-  config.commerce.offers.pop(); config.capabilities=['save','result','exit']; await save(); await assert.rejects(auditRuntime(src), /unlock/);
+  config.commerce.authority='client'; await save(); await assert.rejects(validateRuntime(src), /authority/);
+  config.commerce.authority='platform'; config.commerce.offers.push({...config.commerce.offers[0]}); await save(); await assert.rejects(validateRuntime(src), /offerId/);
+  config.commerce.offers.pop(); config.capabilities=['save','result','exit']; await save(); await assert.rejects(validateRuntime(src), /unlock/);
 }));
 test('rejects runtime traversal, missing resources and private files', () => fixture(async ({src,config,save}) => {
-  config.runtimeFiles.push('../outside.js'); await save(); await assert.rejects(auditRuntime(src), /relative/);
-  config.runtimeFiles.pop(); config.runtimeFiles.push('absent.webp'); await save(); await assert.rejects(auditRuntime(src), /ENOENT/);
-  config.runtimeFiles.pop(); config.runtimeFiles.push('.env'); await save(); await assert.rejects(auditRuntime(src), /private/);
+  config.runtimeFiles.push('../outside.js'); await save(); await assert.rejects(validateRuntime(src), /relative/);
+  config.runtimeFiles.pop(); config.runtimeFiles.push('absent.webp'); await save(); await assert.rejects(validateRuntime(src), /ENOENT/);
+  config.runtimeFiles.pop(); config.runtimeFiles.push('.env'); await save(); await assert.rejects(validateRuntime(src), /private/);
 }));
 test('rejects symlink resources without following them', () => fixture(async ({root,src,config,save}) => {
   await mkdir(path.join(root,'outside')); await symlink(path.join(root,'outside'),path.join(src,'linked'),'junction');
-  config.runtimeFiles.push('linked/leak.js'); await save(); await assert.rejects(auditRuntime(src), /symlink/);
+  config.runtimeFiles.push('linked/leak.js'); await save(); await assert.rejects(validateRuntime(src), /symlink/);
 }));
 test('requires matching passed release evidence and rejects stale/failing evidence', () => fixture(async ({src}) => {
   await writeFile(path.join(src,'release.json'), JSON.stringify({status:'passed',gameVersion:'old'}));
-  await assert.rejects(auditRuntime(src), /evidence/);
+  await assert.rejects(validateRuntime(src), /evidence/);
 }));
 test('rejects runtime prices and incomplete release checks', () => fixture(async ({src,config,save}) => {
-  config.commerce.offers[0].price=10; await save(); await assert.rejects(auditRuntime(src), /prices/);
+  config.commerce.offers[0].price=10; await save(); await assert.rejects(validateRuntime(src), /prices/);
   delete config.commerce.offers[0].price; await save();
   const evidence=JSON.parse(await readFile(path.join(src,'release.json'),'utf8'));
   evidence.checks=evidence.checks.filter(c=>c.name!=='unlock');
   await writeFile(path.join(src,'release.json'),JSON.stringify(evidence));
-  await assert.rejects(auditRuntime(src), /required release/);
+  await assert.rejects(validateRuntime(src), /required release/);
 }));
 test('refuses existing nonempty output and either ancestor relation', () => fixture(async ({src,root}) => {
   await assert.rejects(assembleRuntime(src, path.join(src,'output')), /overlap/);
@@ -101,7 +101,7 @@ test('rejects non-WebP runtime images including vector images', () => fixture(as
     const name=`image.${extension}`;
     await writeFile(path.join(src,name),'not a WebP image');
     config.runtimeFiles.push(name); await save();
-    await assert.rejects(auditRuntime(src), /WebP/, extension);
+    await assert.rejects(validateRuntime(src), /WebP/, extension);
     config.runtimeFiles.pop();
   }
 }));
@@ -113,12 +113,12 @@ test('accepts actual WebP images and rejects a PNG renamed as WebP', () => fixtu
   assert.deepEqual(await readFile(path.join(gameDirectory(path.join(root,'assets')),'scene.webp')),webp);
   assert.equal(manifest.files['scene.webp'].size,webp.length);
   await writeFile(path.join(src,'scene.webp'),Buffer.from('89504e470d0a1a0a','hex'));
-  await assert.rejects(auditRuntime(src), /WebP/);
+  await assert.rejects(validateRuntime(src), /WebP/);
 }));
 
 test('rejects embedded non-WebP image data instead of bypassing the image rule', () => fixture(async ({src}) => {
   await writeFile(path.join(src,'index.html'),'<img src="data:image/png;base64,iVBORw0KGgo=">');
-  await assert.rejects(auditRuntime(src), /WebP/);
+  await assert.rejects(validateRuntime(src), /WebP/);
 }));
 
 test('keeps games and versions independent inside the same story assets directory', () => fixture(async ({src,root,config,save}) => {
@@ -141,5 +141,5 @@ test('keeps games and versions independent inside the same story assets director
 
 test('requires a declared library cover', () => fixture(async ({config,save,src}) => {
   config.runtimeFiles = config.runtimeFiles.filter(name => name !== 'cover.webp'); await save();
-  await assert.rejects(auditRuntime(src), /cover.webp/);
+  await assert.rejects(validateRuntime(src), /cover.webp/);
 }));

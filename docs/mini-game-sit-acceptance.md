@@ -1,6 +1,6 @@
 # 自定义小游戏 SIT 专项验收
 
-适用于 CastLoop Studio SIT 插件 0.1.21。用同一个自定义 H5 包走完 MCP 创作、资产入库、节点应用和消费端播放。本文是操作用例，线上各项初始状态均为待测。
+适用于 CastLoop Studio SIT 插件 0.1.22。用同一个自定义 H5 包走完 MCP 创作、资产入库、节点应用和消费端播放。本文是操作用例，线上各项初始状态均为待测。
 
 ## 测试准备
 
@@ -12,7 +12,7 @@
 
 | 编号 | 操作 | 通过标准 |
 | --- | --- | --- |
-| 01 读取故事与设计 | 在 MCP 中指定故事 A 和节点，提出玩法需求，刻意留下一项影响胜负的设计问题。用 `readStorySections` 和 `readStoryNodes` 核对上下文。 | Agent 使用指定故事的信息，沿用原版设计提问，按回答制作。适用素材优先复用，缺图时优先使用 agent 能力。若实际走 Studio 兜底，记录授权、`generateMedia` 任务 ID 和 `readMediaTasks` 结果。 |
+| 01 读取故事与设计 | 在 MCP 中指定故事 A 和节点，提出玩法需求，刻意留下一项影响胜负的设计问题。用 `readStorySections` 和 `readStoryNodes` 核对上下文。 | Agent 使用指定故事的信息，先读对话、附件和已有 UI，再询问尚未明确的玩法和界面设计，按回答制作。适用素材优先复用，缺图时优先使用 agent 能力。若实际走 Studio 兜底，记录授权、`generateMedia` 任务 ID 和 `readMediaTasks` 结果。 |
 | 02 本地成品 | 按制作指引生成版本目录并试玩。由该目录生成 ZIP，计算 ZIP 的 SHA-256，记录大小和版本。 | 根层有 `index.html`、`generation-manifest.json`；相对路径素材能加载，胜负可触发。压缩包及解压后运行文件各不超过 20 MiB。去向未定时，成品完成后再选择去向。 |
 | 03 上传到项目库 | 要求“只存入故事 A 项目素材库”。调用 `prepareMiniGameUpload(bytes)`，按回执方法和请求头上传原始 ZIP，再用 `importMiniGame` 提交 `library=project`、`storyId`、`uploadId`、显示名、玩法数据和参数 schema。 | 上传成功后取得 `assetId`，用 `listMiniGames` 在 A 项目库读回名称和版本。读回两个节点，原有交互保持原样。若提供的权益配置含显式 0 或 false，读回值与输入一致。 |
 | 04 资产库独立试玩 | 在项目素材库找到刚导入的资产，右键「预览」。随后用 `copyMiniGame` 从 A 转存到个人库，传入 `sourceStoryId`，目标为 `library=personal`。从个人库再次打开预览。 | 两个入口都能在未绑定节点时启动，显示预定标题和图片，响应操作。分别记录两库读回的资产 ID，转存过程中仅上传过一次 ZIP。 |
@@ -37,7 +37,7 @@
 
 | 场景 | 操作与预期 |
 | --- | --- |
-| 故事外创作 | 仅提供玩法资料时按原版交付独立玩法包，无需故事 ID。若已有符合第 02 项的可试玩 H5 成品，另测直接导入个人库，`importMiniGame` 使用 `library=personal` 并省略 `storyId`。用 `listMiniGames` 在个人库读回。 |
+| 故事外创作 | 仅提供玩法资料时按作者需求交付玩法设计或可试玩 H5，无需故事 ID。若已有符合第 02 项的可试玩 H5 成品，另测直接导入个人库，`importMiniGame` 使用 `library=personal` 并省略 `storyId`。用 `listMiniGames` 在个人库读回。 |
 | 仅保留本地 | 明确要求本地交付，核对本地路径及产物。工具记录中应无上传、导入和节点写入。 |
 | 上传或包校验失败 | 用缺少根层 manifest 的测试 ZIP 尝试导入。记录返回错误，再查目标库和节点，确认未产生可选资产或新交互。保留正确的本地包用于重试。 |
 | 无效位置 | 测试不存在的对白、越界的视频时间和未授权替换的出口。应在写入前拦截，读回原互动和出口无变化。 |
@@ -52,3 +52,7 @@
 | 例：07 发布后消费 | NOT_RUN | 待填写发布版本、实际去向和播放截图 | 待填写 |
 
 已有消费端本地回归可作旁证：`regression.txt` 记录 44 项中 43 项通过，1280px 下通关重玩并保留已消耗权益的用例在 30 秒超时；`retry.txt` 记录该项单独重试 3.68 秒通过。重试使用本地预设游戏。线上自定义包的入库、试玩和发布按上表单独记录。
+
+## Caster 与 MCP 打包对照
+
+从 Caster 草稿取得保存请求的工程 ZIP，将同一工程提交到已登录的 POST /api/v1/mini-games/build，并解压一份供 MCP 的 validate-runtime.mjs、assemble-runtime.mjs 使用。比较 Go ZIP 和 MCP 版本目录的文件集合、每个文件的字节及 generation-manifest.json 的 bundleHash。再检查正常卡片保存与库内试玩，缺少封面或宿主桥时应在导入前报错。

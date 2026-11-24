@@ -6,7 +6,7 @@
 - 两地正式插件共用 `https://studio.castloop.ai/mcp`，正式 issuer 为 `https://auth.castloop.ai/oidc`。SIT 仍独立连接测试服务，不复制账号、作品或授权。
 - PRD Logto 已公布 DCR 注册端点；原生、ChatGPT 和 Claude 回调注册及 PKCE 登录页跳转已通过检查。注册成功不等于用户已登录或工具读写、令牌续期已验收。
 - 正式 Codex 插件 1.0.3 保留原预注册公开 Client ID 与回调，兼容已有连接；Claude 与 ChatGPT 使用 DCR。SIT Codex 0.1.19 已迁移 DCR，维护者已反馈重新认证测试正常。
-- Codex 与 Claude 正式插件共用版本号 1.0.3，SIT 为 0.1.21。ChatGPT 使用连接器，无独立插件包版本。安装与授权步骤见 [客户端指南](agent-clients.md)。
+- Codex 与 Claude 正式插件共用版本号 1.0.3，SIT 为 0.1.22。ChatGPT 使用连接器，无独立插件包版本。安装与授权步骤见 [客户端指南](agent-clients.md)。
 - 已有只读授权不会自动升级，需重新连接并确认修改权限。真实客户端登录、工具读写、续期和权限隔离仍按环境及客户端分别验收，不使用一个客户端的结果代替其他客户端。
 - 本次不增加工具 schema 或收费能力，不承诺 BYOK、多端修改冲突处理或自动后台恢复。
 

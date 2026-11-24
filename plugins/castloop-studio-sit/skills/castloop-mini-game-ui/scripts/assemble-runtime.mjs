@@ -2,7 +2,7 @@ import { mkdir, realpath, readdir, writeFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { auditRuntime } from './audit-runtime.mjs';
+import { validateRuntime } from './validate-runtime.mjs';
 
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
 function contains(root, candidate) {
@@ -19,7 +19,7 @@ async function resolvedDestination(value) {
 }
 
 export async function assembleRuntime(project, storyAssetsDirectory) {
-  const {root,config,files} = await auditRuntime(project);
+  const {root,config,files} = await validateRuntime(project);
   const assetsRoot = await resolvedDestination(path.resolve(storyAssetsDirectory));
   const assetDirectory = `mini-games/${config.gameId}/${config.gameVersion}`;
   const destination = path.join(assetsRoot,...assetDirectory.split('/'));

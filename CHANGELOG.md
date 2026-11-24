@@ -1,5 +1,9 @@
 # Changelog
 
+## SIT 0.1.22 — 2026-11-24
+
+- 小游戏创作先读取上下文、附件和 UI，再确认玩法。通用脚本精简为 validate-runtime 和 assemble-runtime，与 Caster 共用运行包格式。
+
 ## 统一多客户端版本：正式 1.0.2／SIT 0.1.18 — 2026-11-13
 
 - Codex 与 Claude 同环境共用插件版本，Claude 不再维护独立的 0.1.x 版本序列。

@@ -49,7 +49,7 @@ async function readRuntimeFile(root, name) {
 }
 
 /** Static packaging preflight, not runtime certification or a security sandbox. */
-export async function auditRuntime(directory) {
+export async function validateRuntime(directory) {
   const root = await realpath(directory);
   const manifestBytes = await readRuntimeFile(root,'game-package.json');
   const config = JSON.parse(manifestBytes.toString('utf8'));
@@ -106,8 +106,8 @@ export async function auditRuntime(directory) {
 }
 if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {
   try {
-    if (process.argv.length !== 3) throw Error('Usage: node audit-runtime.mjs <project-directory>');
-    const result = await auditRuntime(process.argv[2]);
+    if (process.argv.length !== 3) throw Error('Usage: node validate-runtime.mjs <project-directory>');
+    const result = await validateRuntime(process.argv[2]);
     console.log(JSON.stringify({passed:true,mode:result.config.runtime.mode,files:result.files.size,scope:'static-preflight-only'}));
   } catch (error) { console.error(error.message); process.exitCode=1; }
 }
