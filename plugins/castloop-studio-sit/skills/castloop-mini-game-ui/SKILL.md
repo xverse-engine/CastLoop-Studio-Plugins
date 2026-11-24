@@ -38,7 +38,7 @@ description: 为 CastLoop Studio SIT 故事创作、预览或修改 H5 小游戏
 4. 应用前用 readStoryNodes 核对内容段、分支、现有互动与出口。按作者指定的位置选择一种：
    - 图文：绑定实际存在的一句对白，使用 after_line 锚点（sectionId、variantId、dialogueId），读完该句后触发。
    - 视频：传 `anchor={type:"video_time",sectionId,variantId,atMs}`，段内时刻以毫秒计。无法核实所选视频时长时停在项目库。
-   - 节点出口：传 `exit={nextId,failureNextId}`，分别指定成功与失败去向，全部内容结束后触发。仅在作者同意替换已有选项或游戏出口时传 `replaceExit=true`。每次只选 anchor 或 exit。
-5. 当前工具不能表达目标位置或缺少定位依据时，保留项目库资产，报告阻塞，停止写入节点。仅接受 triggerAtMs 的工具不能写入对白锚点或节点出口，禁止用 0、任意秒数或估算阅读时长代替。过程互动使用空闲 interactionId，重试沿用相同 ID 和位置。写后读回 generatedAsset、参数、实际位置和原有路由；无法对应真实内容或出现「待定位」「超出当前内容」时，插入验收判 FAIL。
+   - 节点出口：传 `exit={nextId}` 指定成功去向；玩法声明 failure 时还须传 `exit.failureNextId`，全部内容结束后触发。仅在作者同意替换已有选项或游戏出口时传 `replaceExit=true`。每次只选 anchor 或 exit。
+5. 当前工具不能表达目标位置或缺少定位依据时，保留项目库资产，报告阻塞，停止写入节点。仅接受 triggerAtMs 的工具不能写入对白锚点或节点出口，禁止用 0、任意秒数或估算阅读时长代替。检查游戏包 game-package.json 的 resultCodes。包含 failure 的过程互动须在 anchor 同级传 failureNextId；只有成功结果的玩法省略失败去向。目标必须是本故事中其他有效剧情节点。过程互动使用空闲 interactionId，重试沿用相同 ID 和位置。写后读回 generatedAsset、参数、实际位置和原有路由；无法对应真实内容或出现「待定位」「超出当前内容」时，插入验收判 FAIL。修复同一过程互动时，若工具支持 relocate，沿用原 assetId、interactionId，传 relocate=true 和核实后的 anchor。写后调用 validateStory(storyId) 检查已保存草稿；该工具自行读取故事。
 
 若工具未开放或上传失败，保留本地包并说明哪一步未完成。
