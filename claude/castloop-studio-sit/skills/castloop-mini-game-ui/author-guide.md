@@ -11,6 +11,8 @@ description: 根据作者的玩法、UI 和故事资料设计、制作或修改�
 
 ## 制作与试玩
 
+按宿主实际可用宽高设计游戏，让背景铺满、短屏按钮可达，缩放后点击和拖动仍能命中。制作时参考 [全局 UI](references/common/全局UI.md)，试玩时按 [生成与验收](references/common/生成与验收.md) 检查短屏和桌面内框。
+
 实现可操作的开始、进行、结果和退出流程。优先使用已有素材和 Agent 自带的生成能力，Studio 素材工具兜底。将一张静态 WebP 封面放在根目录 cover.webp 并列入 runtimeFiles。用 miniGameData 和 editorSchema 描述默认参数与可编辑字段，运行时读取宿主 initialParams。
 
 在 MCP 本地工程以 game-package.json 声明入口、宿主桥、能力、结果码、权益、存档版本和全部运行文件。执行：
