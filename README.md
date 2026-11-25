@@ -2,7 +2,7 @@
 
 Agent plugins and MCP connection configurations for CastLoop Studio.
 
-Codex 使用现有插件；ChatGPT 使用远程 MCP 连接器；Claude 聊天、Cowork 和 Claude Code 共用本仓库的 Claude 插件市场。正式与 SIT 分成独立插件，地址由插件提供。Claude 插件已完成本地打包与清单校验，真实客户端 OAuth／工具读取需分别验收，安装成功不代表已连接。详见[客户端连接指南](docs/agent-clients.md)。
+从 Studio 选择客户端并发送消息。已有插件复用当前连接，首次使用按客户端提示确认安装、登录授权。普通聊天需由目录或工作区分发插件。部署条件和旧客户端的手动步骤见[客户端接入指南](docs/agent-clients.md)。
 
 本仓库用于维护和分发插件配置、Skills 与品牌资源。工具定义和业务执行由远程 CastLoop Studio Go MCP 服务提供；安装插件不要求下载或运行后端代码。
 
@@ -16,14 +16,16 @@ Codex 使用现有插件；ChatGPT 使用远程 MCP 连接器；Claude 聊天、
 
 | 插件 | 环境 | 版本 | 能力 |
 | --- | --- | --- | --- |
-| [CastLoop Studio](plugins/castloop-studio/README.md) | 正式环境 | 1.0.3 | 配套 Studio 3.35.0 多客户端接入指引；以已部署工具为准 |
-| [CastLoop Studio SIT](plugins/castloop-studio-sit/README.md) | 测试环境 | 0.1.22 | 新增 H5 小游戏创作技能；素材上传优先本地直传，以实时工具为准 |
+| [CastLoop Studio](plugins/castloop-studio/README.md) | 正式环境 | 1.0.4 | 配套 Studio 3.35.0 多客户端接入指引；以已部署工具为准 |
+| [CastLoop Studio SIT](plugins/castloop-studio-sit/README.md) | 测试环境 | 0.1.23 | 新增 H5 小游戏创作技能；素材上传优先本地直传，以实时工具为准 |
 
 正式作品选择 **CastLoop Studio**；测试作品选择 **CastLoop Studio SIT**。两者连接不同环境，需要对应环境的账号和作品权限。
 
-同一环境的 Codex 与 Claude 插件共用版本号：正式 **1.0.3**，SIT **0.1.22**。版本以 `plugins/<插件名>/.codex-plugin/plugin.json` 为来源，Claude 生成脚本自动同步清单、README 与 ZIP 文件名。以后同环境插件改动统一升版并重新生成，正式与 SIT 仍独立发版。ChatGPT 走连接器，无独立插件包版本。
+同一环境的 Codex 与 Claude 插件共用版本号：正式 **1.0.4**，SIT **0.1.23**。版本以 `plugins/<插件名>/.codex-plugin/plugin.json` 为来源，Claude 生成脚本自动同步清单、README 与 ZIP 文件名。以后同环境插件改动统一升版并重新生成，正式与 SIT 仍独立发版。ChatGPT 走连接器，无独立插件包版本。
 
 ## 在 Codex 中安装
+
+以下为维护者或旧客户端使用的手动安装步骤。
 
 1. 打开插件目录，选择「添加 → 添加插件市场」。
 2. 来源填写 `https://github.com/xverse-engine/CastLoop-Studio-Plugins.git`。Git 引用留空以使用默认分支；稀疏路径留空。
@@ -39,6 +41,8 @@ Codex 使用现有插件；ChatGPT 使用远程 MCP 连接器；Claude 聊天、
 若曾添加后端仓库或本地目录作为同名市场来源，应通过客户端管理入口移除旧市场来源后再添加本仓库，避免同名市场冲突。无需手工修改个人 TOML 或插件缓存。
 
 ## 在 Claude 中安装
+
+以下为维护者或旧客户端使用的手动安装步骤。
 
 1. 在 Claude 网页或桌面的 Plugins（旧界面为 Customize > Plugins）选择 Add > Add marketplace。
 2. 填写 `xverse-engine/CastLoop-Studio-Plugins`，正式环境安装 `castloop-studio`，SIT 安装 `castloop-studio-sit`。

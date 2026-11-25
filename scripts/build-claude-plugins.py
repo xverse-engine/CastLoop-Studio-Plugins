@@ -21,21 +21,14 @@ Check the CastLoop Studio MCP tools actually available in the current session.
 Installing this plugin or seeing this skill is not proof that tools are connected.
 Use only this plugin's environment; never substitute a production connection for SIT or vice versa.
 
-If tools are unavailable, stop. In Claude chat or Cowork, open this plugin's
-Connectors tab, add/connect its bundled connector, then sign in to Studio and
-authorize it. Prefer automatic OAuth registration; do not ask users to enter a
-Client ID, secret, callback port, password or token. An organization Owner may
-need to add/allow the connector first. For Desktop Code installation, direct
-users to + > Add plugins beside the prompt box (or Plugins > Browse plugins).
-Use + > Connectors to connect and authorize Studio. Give /plugin installation
-commands and /mcp authorization instructions to CLI users, not as the only
-desktop workflow. Never invent an OAuth URL. Follow the connection guide in
-the README for fallback custom connectors or CLI instructions.
-
-If the user replies "Connected", check available tools again. If still absent,
-ask them to reload plugins/start a new session, or return to Studio and reopen
-the appropriate Claude/Claude Code handoff. Do not claim authentication failed
-merely because an existing session has not loaded the tools.
+Reuse this plugin's bundled connector. If disconnected, offer the client's
+Connect or Authenticate action and let the user sign in. Never ask for credentials;
+never invent an OAuth URL. If already installed, avoid adding a duplicate.
+In local Claude Code, follow the matching Studio installation guide from the
+handoff when setup is missing. In chat, offer the available native plugin action.
+If the account cannot access the plugin, report that limitation.
+Recheck available tools after authorization and resume the original request.
+If the client requires a reload or fresh session, explain that single next step.
 
 Do not proactively list stories, ask the user to choose one, or pick the most
 recent story. Without a user request or explicit story ID, briefly explain how
@@ -94,27 +87,9 @@ def generated_files(root=ROOT):
 
 ## 安装与连接
 
-在 Claude 网页或桌面的 Plugins（旧界面 Customize > Plugins）中，选择
-Add > Add marketplace，填写 `xverse-engine/CastLoop-Studio-Plugins`，安装 **{name}**。
-打开插件的 Connectors 页签，添加／连接内置连接器，登录对应环境 Studio 账号授权。
-优先自动注册 OAuth，无需手填 MCP 地址、Client ID 或回调端口。
-Team／Enterprise 可能需要管理员先添加或允许连接器。
+从 Studio 打开 Claude 或 Claude Code，发送消息。客户端提供 **{name}** 时，确认安装并登录授权。已安装时直接使用插件内置的连接。工具加载后继续原任务。
 
-Claude 桌面 Code：点输入框左侧 **+ → Add plugins** 安装；若显示 Plugins，选
-Browse plugins。添加上述仓库市场并安装 **{name}**，再通过 Connectors 登录
-Studio 授权。插件不可用时才用 **+ → Connectors** 添加当前环境 MCP 地址。
-桌面本地／SSH 会话支持插件浏览器，云端／WSL 会话的限制以客户端为准。
-
-Claude Code CLI 也可独立安装：
-
-```text
-/plugin marketplace add xverse-engine/CastLoop-Studio-Plugins
-/plugin install {name}@castloop-studio-development
-```
-
-CLI 使用 `/mcp` 完成登录授权。账号插件同步需要支持该功能的 Claude Code
-版本和 Claude 账号登录；API key／Gateway 登录不保证支持账号同步。
-CLI 安装不反向同步到 Claude 账号。安装后开启新会话或按客户端支持使用 `/reload-plugins`。
+Claude Code CLI 可按 Studio 交接消息中的安装说明完成配置。普通聊天需要账号可见的插件。团队管理员和维护者可参考[接入指南]({GUIDE})。
 
 ## 使用
 

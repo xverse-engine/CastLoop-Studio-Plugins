@@ -11,21 +11,14 @@ Check the CastLoop Studio MCP tools actually available in the current session.
 Installing this plugin or seeing this skill is not proof that tools are connected.
 Use only this plugin's environment; never substitute a production connection for SIT or vice versa.
 
-If tools are unavailable, stop. In Claude chat or Cowork, open this plugin's
-Connectors tab, add/connect its bundled connector, then sign in to Studio and
-authorize it. Prefer automatic OAuth registration; do not ask users to enter a
-Client ID, secret, callback port, password or token. An organization Owner may
-need to add/allow the connector first. For Desktop Code installation, direct
-users to + > Add plugins beside the prompt box (or Plugins > Browse plugins).
-Use + > Connectors to connect and authorize Studio. Give /plugin installation
-commands and /mcp authorization instructions to CLI users, not as the only
-desktop workflow. Never invent an OAuth URL. Follow the connection guide in
-the README for fallback custom connectors or CLI instructions.
-
-If the user replies "Connected", check available tools again. If still absent,
-ask them to reload plugins/start a new session, or return to Studio and reopen
-the appropriate Claude/Claude Code handoff. Do not claim authentication failed
-merely because an existing session has not loaded the tools.
+Reuse this plugin's bundled connector. If disconnected, offer the client's
+Connect or Authenticate action and let the user sign in. Never ask for credentials;
+never invent an OAuth URL. If already installed, avoid adding a duplicate.
+In local Claude Code, follow the matching Studio installation guide from the
+handoff when setup is missing. In chat, offer the available native plugin action.
+If the account cannot access the plugin, report that limitation.
+Recheck available tools after authorization and resume the original request.
+If the client requires a reload or fresh session, explain that single next step.
 
 Do not proactively list stories, ask the user to choose one, or pick the most
 recent story. Without a user request or explicit story ID, briefly explain how
