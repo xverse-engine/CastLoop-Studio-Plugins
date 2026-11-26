@@ -16,6 +16,17 @@ files = {
         .replace('test environment only', 'production environment')
         .encode('utf-8'),
 }
+game = Path('skills/castloop-mini-game-ui')
+for path in sorted((source / game).rglob('*')):
+    if not path.is_file() or path.suffix not in {'.md', '.ts', '.json', '.mjs', '.py'}:
+        continue
+    content = path.read_bytes()
+    if path == source / game / 'SKILL.md':
+        guide = path.read_text(encoding='utf-8').replace('CastLoop Studio SIT', 'CastLoop Studio')
+        guide = guide.replace('SIT storyId', '正式环境 storyId').replace('当前 SIT 连接', '当前正式环境连接')
+        content = guide.encode('utf-8')
+    files[path.relative_to(source)] = content
+
 for name, content in files.items():
     destination = target / name
     if args.check:

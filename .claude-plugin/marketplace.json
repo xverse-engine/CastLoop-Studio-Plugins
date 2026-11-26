@@ -10,7 +10,7 @@
     {
       "name": "castloop-studio",
       "source": "./claude/castloop-studio",
-      "description": "Create with CastLoop Studio: find stories, edit scripts and assets, generate media and save results to your projects."
+      "description": "Create with CastLoop Studio: find stories, edit scripts and assets, create playable H5 mini-games, generate media and save results to your projects."
     },
     {
       "name": "castloop-studio-sit",

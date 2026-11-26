@@ -71,14 +71,13 @@ def generated_files(root=ROOT):
         heading_end = skill.index('\n\n', frontmatter_end + 2)
         skill = skill[:heading_end + 2] + ONBOARDING + skill[heading_end + 2:]
         files[prefix / 'skills/studio-creation/SKILL.md'] = skill.encode('utf-8')
-        if name == 'castloop-studio-sit':
-            game = Path('skills/castloop-mini-game-ui')
-            paths = [Path('SKILL.md'), Path('author-guide.md')]
-            paths.extend(path.relative_to(root / game) for path in sorted((root / game).rglob('*'))
-                         if path.is_file() and path != root / game / 'SKILL.md'
-                         and path.suffix in {'.md', '.ts', '.json', '.mjs', '.py'})
-            for relative in paths:
-                files[prefix / game / relative] = (source / game / relative).read_bytes()
+        game = Path('skills/castloop-mini-game-ui')
+        paths = [Path('SKILL.md'), Path('author-guide.md')]
+        paths.extend(path.relative_to(root / game) for path in sorted((root / game).rglob('*'))
+                     if path.is_file() and path != root / game / 'SKILL.md'
+                     and path.suffix in {'.md', '.ts', '.json', '.mjs', '.py'})
+        for relative in paths:
+            files[prefix / game / relative] = (source / game / relative).read_bytes()
         files[prefix / 'LICENSE'] = (root / 'LICENSE').read_bytes()
         files[prefix / 'README.md'] = f'''# CastLoop Studio {'SIT' if environment == 'SIT' else 'PRD'} for Claude
 
