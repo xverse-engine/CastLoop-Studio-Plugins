@@ -1,0 +1,7 @@
+{
+  "mcpServers": {
+    "castloop-studio": {
+      "url": "https://studio.castloop.ai/mcp"
+    }
+  }
+}

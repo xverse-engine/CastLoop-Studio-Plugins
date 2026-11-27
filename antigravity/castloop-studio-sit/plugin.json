@@ -1,0 +1,15 @@
+{
+  "name": "castloop-studio-sit",
+  "displayName": "CastLoop Studio SIT",
+  "version": "0.1.24",
+  "description": "Connect to CastLoop Studio SIT to find stories, read saved content and use supported character, asset, world and outline editing tools.",
+  "author": {
+    "name": "CastLoop"
+  },
+  "repository": "https://github.com/xverse-engine/CastLoop-Studio-Plugins",
+  "logo": "assets/icon.png",
+  "suggestedPrompts": [
+    "读取我指定的 SIT 测试故事角色，先不要修改。",
+    "根据我的要求修改指定故事的角色资料，并读回核对。"
+  ]
+}

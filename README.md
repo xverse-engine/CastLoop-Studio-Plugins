@@ -71,6 +71,16 @@ python -m unittest discover -s scripts/tests -p test_claude_plugins.py -v
 
 测试 ZIP：追加 `--archive-dir <仓库外输出目录>`，每包只包含 Claude 清单、MCP、Skill、README 和 LICENSE。源文件生成、清单验证、OAuth 登录、实际故事读取分别验收。
 
+## Antigravity
+
+Antigravity 原生插件包位于 `antigravity/castloop-studio/`（正式）和 `antigravity/castloop-studio-sit/`（SIT），与同环境 Codex／Claude 插件共用版本号。将对应目录复制到 `~/.gemini/config/plugins/<插件名>/`，或在 `~/.gemini/config/mcp_config.json` 中配置对应环境的 Streamable HTTP URL，首次连接走自动 OAuth 授权。详见[连接指南](docs/agent-clients.md#antigravity)。
+
+```text
+python scripts/build-antigravity-plugins.py
+python scripts/build-antigravity-plugins.py --check
+python -m unittest discover -s scripts/tests -p test_antigravity_plugins.py -v
+```
+
 ## ChatGPT
 
 继续按[连接指南](docs/agent-clients.md)添加远程 MCP 连接器，SIT 使用已验证的 DCR 流程。无需安装本仓库的 Claude 插件。

@@ -64,6 +64,15 @@ Codex 正式版保留已验证的固定公开 Client ID 流程；SIT 0.1.19 改�
 
 首次交接仅读取线上保存内容，不主动列作品、选择最近故事、修改故事或提交收费任务。后续明确要求修改／生成后按 Skill、实际工具和账号权限执行。
 
+## Antigravity
+
+Antigravity 原生插件包位于本仓库 `antigravity/castloop-studio`（正式）与 `antigravity/castloop-studio-sit`（SIT），内含 `plugin.json`、`mcp_config.json`（Streamable HTTP）和创作 Skill。
+
+1. 将对应环境目录复制到 `~/.gemini/config/plugins/<插件名>/`（或通过 `agy plugin install` 安装）。
+2. 如仅需远程工具而不安装插件，可在 `~/.gemini/config/mcp_config.json` 中添加对应环境的 `url`（正式 `https://studio.castloop.ai/mcp`，SIT `https://castloop-sit.xverse.cn/mcp`）。
+3. 打开 Antigravity，在 **Additional Options (...) → MCP Servers** 中确认服务已加载；首次连接按提示完成浏览器 OAuth 登录授权（自动注册，无需手填 Client ID、Secret 或回调端口）。
+4. 从编辑器点击「连接外部 Agent → Antigravity」复制提示词并粘贴到 Antigravity 对话框即可继续创作。
+
 ## 无法安装或连接时
 
 - **插件入口不可用**：按客户端支持添加自定义连接器。桌面输入框内左侧 `+` → Connectors / Add connectors；也可在 Plugins／旧版 Customize 中管理连接器。填入表中当前环境 MCP URL，选择 OAuth 自动注册并登录 Studio。
